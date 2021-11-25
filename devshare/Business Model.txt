@@ -1,0 +1,51 @@
+//Business View: POST - Allgemein
++ Image
++ video
++ Upvotes
++ UserProfile
+    + Username
+    + ProfileImage - Preview
++ Tags
++ Kommentartex
+
+# toggle_upvote
+# (add_tag)
+# show_Kommentare
+# show_userprofile
+# show_tags
+
+
+//Business View: POST - Kommentare
++ UserProfile
+    + Username
+    + ProfileImage
++ Kommentar
+    + Kommentartext
+    + Upvotes
+    + Anzahl Sub-Kommentare
+
+# add_comment
+# show_userprofile
+# Upvotes
+# (show_subomments)
+
+//Business View: UserProfile
++ Username
++ UserProfile
++ UserDescription
++ Followers - Cout
++ Following - Cout
++ Posts
+    + PostImage/Video - Preview
+# toggle_followship
+# show_messages
+
+
+//Business View: Message
++ UserProfileImage - Self
++ UserProfileImage - Partner
++ Kommentare
+    + Text
+    + Uhrzeit
+# add_message
+# show_profile
