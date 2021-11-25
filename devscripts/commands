@@ -1,0 +1,16 @@
+python .\manage.py makemigrations
+python .\manage.py runserver
+python .\manage.py migrate
+python .\manage.py startapp App
+python  -m venv env
+python.exe .\manage.py createsuperuser
+pip install djangorestframework 
+pip install django 
+django-admin startproject example_web_api
+pip install django-binary-database-files
+pip install djangorestframework_simplejwt
+
+.\env\Scripts\Activate.ps1
+
+
+

@@ -1,0 +1,11 @@
+//Delete your migrations folder
+
+//Remove-Item 'core/migrations' -Recurse
+Get-ChildItem -Path "core/migrations" -File  | Where-Object { $_.Name -ne "__init__.py" } | Remove-Item
+
+//DELETE FROM django_migrations WHERE app = <your app name> . You could alternatively just truncate this table.
+DELETE FROM django_migrations WHERE app = "core";
+
+
+python manage.py makemigrations
+python manage.py migrate --fake
