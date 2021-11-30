@@ -6,7 +6,7 @@
     + Username
     + ProfileImage - Preview
 + Tags
-+ Kommentartex
++ Kommentartexc
 
 # toggle_upvote
 # (add_tag)

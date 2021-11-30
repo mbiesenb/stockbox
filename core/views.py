@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from rest_framework.exceptions import ErrorDetail
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -14,6 +15,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import generics
 from django.contrib.auth.models import User
 from django.forms.models import model_to_dict
+import json
+
 
 
 # Create your views here.
@@ -98,17 +101,26 @@ class BV_PostView(generics.CreateAPIView):
     def get(self, request,pk=None):
 
 
-        bv_post = BV_Post()
+        
 
         snapshot = get_object_or_404(Snapshot.objects.all(), pk=1)
 
         #bv_post.snapshot = get_object_or_404(queryset, pk=1)
         #bv_post.upvotes = snapshot.prefetch_related('snapshot_upvotes').count()
-        bv_post.upvotes = snapshot.snapshot_upvotes.count()
-        bv_post.comment_count = snapshot.comments.count()
-        bv_post.profile = snapshot.author
-        bv_post.tags = snapshot.tags
-        
-        ser = BV_PostSerializer(data=bv_post)
-        ser.is_valid(raise_exception=True)
+        upvotes = snapshot.snapshot_upvotes.count()
+        comment_count = snapshot.comments.count()
+        profile = snapshot.author
+        tags = snapshot.tags
+        bv_post = BV_Post(
+            psnapshot=snapshot,
+            comment_count=comment_count,
+            profile=profile,
+            tags=tags,
+            upvotes=upvotes,
+        )
+        #dict_obj = model_to_dict( tags )
+        #serialized = json.dumps(dict_obj)
+        #print(serialized)
+        ser = BV_PostSerializer(bv_post)
+        #ser.is_valid(raise_exception=True)
         return Response(ser.data)

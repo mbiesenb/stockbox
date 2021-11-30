@@ -8,7 +8,7 @@ from django.contrib.auth.password_validation import validate_password
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('firstname', 'lastname', 'nick')
+        fields = ('firstname', 'lastname', 'user')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -73,10 +73,10 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class BV_PostSerializer(serializers.ModelSerializer):
 
-    profile = UserProfileSerializer(many=True, read_only=True)
+    profile = UserProfileSerializer(many=False, read_only=True)
     tags = TagSerializer(many=True, read_only=True)
 
     class Meta:
         model = BV_Post
-        fields = ("__all__")
+        fields = ("upvotes","comment_count","profile","tags")
         depth = 1

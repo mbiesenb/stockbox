@@ -1,4 +1,4 @@
-from core.models import Location, UserProfile, Comment, Follow,Snapshot, Message, Tag, UserImage, SnapShotImage
+from core.models import Location, Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag, UserImage, SnapShotImage
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 from django.core.management import call_command
@@ -110,20 +110,30 @@ class Command(BaseCommand):
         c33 = Comment.objects.create( text = 'Random Comment 3', snapshot=s3,  author=up3, upvotes=3)
 
         print(Fore.GREEN+"4.8.INSERT TAG")
-        t11 = Tag.objects.create( text = 'Random Tag 1', author=up1)
-        t12 = Tag.objects.create( text = 'Random Tag 2', author=up2)
-        t13 = Tag.objects.create( text = 'Random Tag 3', author=up3)
-        t21 = Tag.objects.create( text = 'Random Tag 1', author=up1)
-        t22 = Tag.objects.create( text = 'Random Tag 2', author=up2)
-        t23 = Tag.objects.create( text = 'Random Tag 3', author=up3)
-        t31 = Tag.objects.create( text = 'Random Tag 1', author=up1)
-        t32 = Tag.objects.create( text = 'Random Tag 2', author=up2)
-        t33 = Tag.objects.create( text = 'Random Tag 3', author=up3)
+        t11 = Tag.objects.create( text = 'Random Tag 1', author=up1, snapshot=s1)
+        t12 = Tag.objects.create( text = 'Random Tag 2', author=up2, snapshot=s1)
+        t13 = Tag.objects.create( text = 'Random Tag 3', author=up3, snapshot=s1)
+        t21 = Tag.objects.create( text = 'Random Tag 1', author=up1, snapshot=s1)
+        t22 = Tag.objects.create( text = 'Random Tag 2', author=up2, snapshot=s1)
+        t23 = Tag.objects.create( text = 'Random Tag 3', author=up3, snapshot=s2)
+        t31 = Tag.objects.create( text = 'Random Tag 1', author=up1,snapshot=s2)
+        t32 = Tag.objects.create( text = 'Random Tag 2', author=up2,snapshot=s2)
+        t33 = Tag.objects.create( text = 'Random Tag 3', author=up3,snapshot=s2)
 
         print(Fore.GREEN+"4.9.INSERT MESSAGE")
         m1  = Message.objects.create( sender = up1, receiver = up2 , text = "Hello User 2, I am 1")
         m2  = Message.objects.create( sender = up1, receiver = up3,  text = "Hello User 3, I am 1")
 
+        print(Fore.GREEN+"4.9.INSERT UPVOTES")
+        uv1 = Upvote.objects.create(upvoter=up1, type=1, tag=None, comment=None, snapshot=s1)
+        uv2 = Upvote.objects.create(upvoter=up2, type=1, tag=None, comment=None, snapshot=s1)
+
+
+#upvoter = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='upvoter', null=True)
+#    type = models.IntegerField() #1 = tag, 2=comment, 3 = snapshot
+#    tag = models.ForeignKey(Tag, on_delete=SET_NULL, related_name='tag_upvotes', null=True)
+#    comment = models.ForeignKey(Comment, on_delete=SET_NULL, related_name='comment_upvotes', null=True)
+#    snapshot
 
 
 

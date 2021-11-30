@@ -26,18 +26,10 @@ class UserProfile(models.Model):
     lastname = models.CharField(max_length=100)
     pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
     def __str__(self) -> str:
-        return self.nick
+        return self.user
 
 
-class SnapShotImage(models.Model):
-    filename = models.CharField(max_length=50)
-    filetype = models.CharField(max_length=10)
-    img_x = models.IntegerField()
-    img_y = models.IntegerField() 
-    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
 
-    def __str__(self) -> str:
-        return self.filename + "." + self.filetype
 
 
 class Location(models.Model):
@@ -48,12 +40,34 @@ class Location(models.Model):
     def __str__(self) -> str:
         return self.longitude + "." + self.latitude + "->" + self.locationText
 
+class MediaImage(models.Model):
+    img_x = models.IntegerField()
+    img_y = models.IntegerField() 
+    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
+
+    def __str__(self) -> str:
+        return self.img_x + "." + self.img_y
+
+class MediaVideo(models.Model):
+    duration = models.IntegerField()
+    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
+
+    def __str__(self) -> str:
+        return self.duration
+
+
+class SnapShotMedia(models.Model):
+    media_type = models.IntegerField()
+    media_url = models.CharField(max_length=50)
+    media_filetype = models.CharField(max_length=50)
+    media_image = models.ForeignKey(MediaImage, on_delete=models.SET_NULL, null=True)
+    media_video = models.ForeignKey(MediaImage, on_delete=models.SET_NULL, null=True)
 
 class Snapshot(models.Model):
     title = models.CharField(max_length=100)
     desc = models.CharField(max_length=100)
     author = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True)
-    pic = models.ForeignKey(SnapShotImage, on_delete=models.SET_NULL, null=True)
+    media = models.ForeignKey(SnapShotMedia, on_delete=models.SET_NULL, null=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     upvotes = models.IntegerField()
 
@@ -98,11 +112,22 @@ class Upvote(models.Model):
 
 #@dataclass
 class BV_Post(models.Model):
-    snapshot : Snapshot
-    upvotes  : int
-    comment_count : int
-    profile : UserProfile
-    tags : List[Tag]
+    media_type = ""
+    media_url = ""
+    snapshot = None
+    upvotes  = 0
+    comment_count = 0
+    profile  = None
+    tags = list()
+
+    def __init__(self, psnapshot, upvotes, comment_count, profile, tags, media_type, media_url):
+        self.media_type = media_type
+        self.media_url = media_url
+        self.snapshot = psnapshot
+        self.upvotes = upvotes
+        self.comment_count = comment_count
+        self.profile = profile
+        self.tags = tags
 
     class Meta:
         managed = False
