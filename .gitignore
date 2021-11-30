@@ -89,5 +89,5 @@ coverage.xml
 
 # Stockbox files
 core/migrations/*
-
 core/management/commands/*
+env/

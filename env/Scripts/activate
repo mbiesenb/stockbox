@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\marvi\Desktop\Programmieren\Projekte\Python\stockbox\env"
+VIRTUAL_ENV="C:\Users\Marvin\Desktop\Private Entwicklungen\stockbox\env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

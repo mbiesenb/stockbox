@@ -10,6 +10,8 @@ django-admin startproject example_web_api
 pip install django-binary-database-files
 pip install djangorestframework_simplejwt
 
+
+Set-ExecutionPolicy RemoteSigned  //Allow Powershell Execution
 .\env\Scripts\Activate.ps1
 
 

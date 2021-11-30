@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\marvi\Desktop\Programmieren\Projekte\Python\stockbox\env
+set VIRTUAL_ENV=C:\Users\Marvin\Desktop\Private Entwicklungen\stockbox\env
 
 if not defined PROMPT set PROMPT=$P$G
 
