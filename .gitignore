@@ -88,6 +88,11 @@ coverage.xml
 .ipynb_checkpoints 
 
 # Stockbox files
-core/migrations/*
 core/management/commands/*
-env/
+
+/env
+
+.env
+
+migrations
+*.py
