@@ -90,9 +90,6 @@ coverage.xml
 # Stockbox files
 core/management/commands/*
 
-/env
-
-.env
 
 core/migrations/
-*.py
+env/

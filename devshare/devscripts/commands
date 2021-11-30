@@ -9,10 +9,17 @@ pip install django
 django-admin startproject example_web_api
 pip install django-binary-database-files
 pip install djangorestframework_simplejwt
+pip install colorama
+https://github.com/mbiesenb/stockbox.git
 
 
 Set-ExecutionPolicy RemoteSigned  //Allow Powershell Execution
 .\env\Scripts\Activate.ps1
 
+
+python manage populate_db
+
+
+git rm -r --cached .\env\
 
 
