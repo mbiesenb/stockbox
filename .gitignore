@@ -94,5 +94,5 @@ core/management/commands/*
 
 .env
 
-migrations
+core/migrations/
 *.py
