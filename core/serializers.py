@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from . models import Comment, Snapshot, UserProfile, Tag
+from . models import Comment, Snapshot, UserProfile, Tag, BV_Post
 from django.contrib.auth import get_user_model 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.models import User
@@ -58,6 +58,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        
         user = User.objects.create(
             username=validated_data['username'],
             email=validated_data['email'],
@@ -69,3 +70,13 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.save()
 
         return user
+
+class BV_PostSerializer(serializers.ModelSerializer):
+
+    profile = UserProfileSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = BV_Post
+        fields = ("__all__")
+        depth = 1

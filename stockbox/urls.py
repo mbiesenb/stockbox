@@ -17,6 +17,7 @@ from django import urls
 from django.contrib import admin
 from django.db import router
 from django.urls import path, include
+#from core.models import BV_Post
 from rest_framework.urlpatterns import format_suffix_patterns
 from core import views
 from rest_framework.routers import BaseRouter, DefaultRouter
@@ -28,6 +29,7 @@ from core.views import RegisterView
 router = DefaultRouter()
 router.register(r'snapshots', views.SnapShotViewSet)
 router.register(r'UserProfile', views.UserProfileViewSet)
+#router.register(r'Post', views.BV_Post, basename='post')
 
 urlpatterns = [
     path('api/', include(router.urls)),
@@ -35,7 +37,9 @@ urlpatterns = [
     path('api/token/' , TokenObtainPairView.as_view()),
     path('api/token/refresh' , TokenRefreshView.as_view()),
     path('api/token/verify' , TokenVerifyView.as_view()),
-    path('register/', RegisterView.as_view())
+    path('register/', RegisterView.as_view()),
+    #path('api/post/', views.BV_Post)
+    path('post/<int:pk>/', views.BV_PostView.as_view()),
 ]
 
 

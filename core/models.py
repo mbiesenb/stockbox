@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
+from django.db.models.fields import IntegerField
+from dataclasses import dataclass
+from typing import List
 #from django.db.models.base import Model
 
 
@@ -85,3 +88,21 @@ class Message(models.Model):
 class Follow(models.Model):
     follower = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='follower',null=True)
     stalker = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='stalker',null=True)
+
+class Upvote(models.Model):
+    upvoter = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='upvoter', null=True)
+    type = models.IntegerField() #1 = tag, 2=comment, 3 = snapshot
+    tag = models.ForeignKey(Tag, on_delete=SET_NULL, related_name='tag_upvotes', null=True)
+    comment = models.ForeignKey(Comment, on_delete=SET_NULL, related_name='comment_upvotes', null=True)
+    snapshot = models.ForeignKey(Snapshot, on_delete=SET_NULL, related_name='snapshot_upvotes', null=True)
+
+#@dataclass
+class BV_Post(models.Model):
+    snapshot : Snapshot
+    upvotes  : int
+    comment_count : int
+    profile : UserProfile
+    tags : List[Tag]
+
+    class Meta:
+        managed = False
