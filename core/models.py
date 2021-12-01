@@ -46,22 +46,25 @@ class MediaImage(models.Model):
     #pic = models.ImageField(null=True, blank=True, upload_to='images/')
 
     def __str__(self) -> str:
-        return self.img_x + "." + self.img_y
+        return "image"
 
 class MediaVideo(models.Model):
     duration = models.IntegerField()
     #pic = models.ImageField(null=True, blank=True, upload_to='images/')
 
     def __str__(self) -> str:
-        return self.duration
+        return "video"
 
 
 class SnapShotMedia(models.Model):
     media_type = models.IntegerField()
     media_url = models.CharField(max_length=50)
     media_filetype = models.CharField(max_length=50)
-    media_image = models.ForeignKey(MediaImage, on_delete=models.SET_NULL, null=True)
-    media_video = models.ForeignKey(MediaImage, on_delete=models.SET_NULL, null=True)
+    media_image = models.ForeignKey(MediaImage, on_delete=models.SET_NULL,related_name='media_image', null=True)
+    media_video = models.ForeignKey(MediaVideo, on_delete=models.SET_NULL, related_name='media_video', null=True)
+
+    def __str__(self) -> str:
+        return self.type
 
 class Snapshot(models.Model):
     title = models.CharField(max_length=100)

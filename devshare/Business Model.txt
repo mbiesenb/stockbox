@@ -1,6 +1,6 @@
 //Business View: POST - Allgemein
-+ Image
-+ video
++ MediaUrl
++ MediaType
 + Upvotes
 + UserProfile
     + Username
@@ -9,10 +9,21 @@
 + Kommentartexc
 
 # toggle_upvote
+    --> /post/<pk:int>/like : PUT (without body)
 # (add_tag)
+    --> /post/<pk:int>/tags : POST
+    +text
+# add_comment
+    --> /post/<pk:int>/comments : POST
+    +text
 # show_Kommentare
+    --> /post/<pk:int>/comments  : GET
+# create
+    +media
+    +tags
+
 # show_userprofile
-# show_tags
+    --> /user/<pk:int>
 
 
 //Business View: POST - Kommentare
@@ -25,8 +36,13 @@
     + Anzahl Sub-Kommentare
 
 # add_comment
+    --> /post/<pk:int>/comments : POST
+    +text 
 # show_userprofile
-# Upvotes
+    -->/user/<pk:int>
+# Toggle Upvote
+    -->/post/<pk:int>/comments/<pk:int>/ : PUT (without body)
+        
 # (show_subomments)
 
 //Business View: UserProfile

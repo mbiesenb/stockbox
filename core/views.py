@@ -104,19 +104,20 @@ class BV_PostView(generics.CreateAPIView):
         
 
         snapshot = get_object_or_404(Snapshot.objects.all(), pk=1)
-
-        #bv_post.snapshot = get_object_or_404(queryset, pk=1)
-        #bv_post.upvotes = snapshot.prefetch_related('snapshot_upvotes').count()
-        upvotes = snapshot.snapshot_upvotes.count()
-        comment_count = snapshot.comments.count()
-        profile = snapshot.author
-        tags = snapshot.tags
+        media_url       = snapshot.media.media_url
+        media_type      = snapshot.media.media_type
+        upvotes         = snapshot.snapshot_upvotes.count()
+        comment_count   = snapshot.comments.count()
+        profile         = snapshot.author
+        tags            = snapshot.tags
         bv_post = BV_Post(
             psnapshot=snapshot,
             comment_count=comment_count,
             profile=profile,
             tags=tags,
             upvotes=upvotes,
+            media_url = media_url,
+            media_type = media_type
         )
         #dict_obj = model_to_dict( tags )
         #serialized = json.dumps(dict_obj)

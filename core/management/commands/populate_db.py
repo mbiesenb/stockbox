@@ -1,4 +1,4 @@
-from core.models import Location, Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag, UserImage, SnapShotImage
+from core.models import Location, Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag, UserImage, MediaImage, MediaVideo, SnapShotMedia
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 from django.core.management import call_command
@@ -88,15 +88,24 @@ class Command(BaseCommand):
         l2 = Location.objects.create( longitude="444", latitude="999",locationText="Zürich" )
         l3 = Location.objects.create( longitude="444", latitude="999",locationText="Wien" )
 
-        print(Fore.GREEN+"4.5.INSERT SNAPSHOTIMAGE")
-        si1 = SnapShotImage.objects.create( filename = 'file1',  filetype = 'jpg',  img_x = 100,  img_y = 100 )
-        si2 = SnapShotImage.objects.create( filename = 'file2',  filetype = 'jpg',  img_x = 100,  img_y = 100 )
-        si3 = SnapShotImage.objects.create( filename = 'file3',  filetype = 'jpg',  img_x = 100,  img_y = 100 )
+        print(Fore.GREEN+"4.5.1 INSERT MEDIAIMAGE")
+        mi1 = MediaImage.objects.create( img_x = 100, img_y = 100)
+        mi2 = MediaImage.objects.create( img_x = 200, img_y = 400)
+
+
+        print(Fore.GREEN+"4.5.2 INSERT MEDIAVIDEO")
+        mv1 = MediaVideo.objects.create( duration = 120 )
+        mv2 = MediaVideo.objects.create( duration = 180 )
+
+        print(Fore.GREEN+"4.5.3 INSERT SNAPSHOTMEDIA")
+        sm1 = SnapShotMedia.objects.create( media_type = 1, media_url='www.google.de', media_filetype='png', media_image=mi1, media_video=None)
+        sm2 = SnapShotMedia.objects.create( media_type = 1, media_url='www.google.de', media_filetype='png', media_image=mi2, media_video=None)
+        sm3 = SnapShotMedia.objects.create( media_type = 2, media_url='www.google.de', media_filetype='png', media_image=None, media_video=mv1)
 
         print(Fore.GREEN+"4.6.INSERT SNAPSHOT")
-        s1 = Snapshot.objects.create( title = 'Snapshot1' , desc = 'This is Snapshot 1', author = up1, pic = si1, location = l1, upvotes =101)
-        s2 = Snapshot.objects.create( title = 'Snapshot2' , desc = 'This is Snapshot 2', author = up1, pic = si2, location = l2, upvotes =102)
-        s3 = Snapshot.objects.create( title = 'Snapshot3' , desc = 'This is Snapshot 3', author = up1, pic = si3, location = l3, upvotes =103)
+        s1 = Snapshot.objects.create( title = 'Snapshot1' , desc = 'This is Snapshot 1', author = up1, media = sm1, location = l1, upvotes =101)
+        s2 = Snapshot.objects.create( title = 'Snapshot2' , desc = 'This is Snapshot 2', author = up1, media = sm2, location = l2, upvotes =102)
+        s3 = Snapshot.objects.create( title = 'Snapshot3' , desc = 'This is Snapshot 3', author = up1, media = sm3, location = l3, upvotes =103)
 
         print(Fore.GREEN+"4.7.INSERT COMMENT")
         c11 = Comment.objects.create( text = 'Random Comment 1', snapshot=s1,  author=up1, upvotes=1)

@@ -78,5 +78,5 @@ class BV_PostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BV_Post
-        fields = ("upvotes","comment_count","profile","tags")
+        fields = ("media_type","media_url","upvotes","comment_count","profile","tags")
         depth = 1
