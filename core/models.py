@@ -21,9 +21,10 @@ class UserImage(models.Model):
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=SET_NULL, null=True)
+    user = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='profile')
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
     pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
     def __str__(self) -> str:
         return self.user
