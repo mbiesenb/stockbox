@@ -4,6 +4,7 @@ from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
 from django.db.models.fields import IntegerField
 from dataclasses import dataclass
 from typing import List
+from django.core.exceptions import ObjectDoesNotExist
 #from django.db.models.base import Model
 
 
@@ -22,10 +23,22 @@ class UserImage(models.Model):
 
 class UserProfile(models.Model):
     user = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='profile')
+    username = models.CharField(max_length=150) # TODO: Find other solution
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
     pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
+    
+    def get(username):
+        #try:
+        #    profile = UserProfile.objects.get(username=username)
+        #except ObjectDoesNotExist:
+        #    return None
+        #
+        #return profile
+        profile = UserProfile.objects.get(username=username)
+        return profile
+
     def __str__(self) -> str:
         return self.user
 
@@ -59,7 +72,7 @@ class MediaVideo(models.Model):
 
 class SnapShotMedia(models.Model):
     media_type = models.IntegerField()
-    media_url = models.CharField(max_length=50)
+    media_url = models.CharField(max_length=50, default='')
     media_filetype = models.CharField(max_length=50)
     media_image = models.ForeignKey(MediaImage, on_delete=models.SET_NULL,related_name='media_image', null=True)
     media_video = models.ForeignKey(MediaVideo, on_delete=models.SET_NULL, related_name='media_video', null=True)
@@ -69,8 +82,8 @@ class SnapShotMedia(models.Model):
 
 class Snapshot(models.Model):
     title = models.CharField(max_length=100)
-    desc = models.CharField(max_length=100)
-    author = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True)
+    description = models.CharField(max_length=100)
+    author = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, related_name='snapshots', null=True)
     media = models.ForeignKey(SnapShotMedia, on_delete=models.SET_NULL, null=True)
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     upvotes = models.IntegerField()
@@ -91,28 +104,28 @@ class Comment(models.Model):
 
 
 class Tag(models.Model):
-    text = models.CharField(max_length=30)
-    snapshot = models.ForeignKey(Snapshot, related_name='tags', on_delete=models.SET_NULL, null=True) 
-    author = models.ForeignKey(UserProfile , on_delete=models.SET_NULL, null=True)
+    text        = models.CharField(max_length=30)
+    snapshot    = models.ForeignKey(Snapshot, related_name='tags', on_delete=models.SET_NULL, null=True) 
+    author      = models.ForeignKey(UserProfile , on_delete=models.SET_NULL, null=True)
 
     def __str__(self) -> str:
         return self.text
 
 class Message(models.Model):
-    sender = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='sender' ,null=True)
-    receiver = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='receiver',null=True)
-    text = models.CharField(max_length=500)
+    sender      = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='sender' ,null=True)
+    receiver    = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='receiver',null=True)
+    text        = models.CharField(max_length=500)
 
 class Follow(models.Model):
-    follower = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='follower',null=True)
-    stalker = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='stalker',null=True)
+    follower    = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='following',null=True)
+    stalker     = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='followers',null=True)
 
 class Upvote(models.Model):
-    upvoter = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='upvoter', null=True)
-    type = models.IntegerField() #1 = tag, 2=comment, 3 = snapshot
-    tag = models.ForeignKey(Tag, on_delete=SET_NULL, related_name='tag_upvotes', null=True)
-    comment = models.ForeignKey(Comment, on_delete=SET_NULL, related_name='comment_upvotes', null=True)
-    snapshot = models.ForeignKey(Snapshot, on_delete=SET_NULL, related_name='snapshot_upvotes', null=True)
+    upvoter     = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='upvoter', null=True)
+    type        = models.IntegerField() #1 = tag, 2=comment, 3 = snapshot
+    tag         = models.ForeignKey(Tag, on_delete=SET_NULL, related_name='tag_upvotes', null=True)
+    comment     = models.ForeignKey(Comment, on_delete=SET_NULL, related_name='comment_upvotes', null=True)
+    snapshot    = models.ForeignKey(Snapshot, on_delete=SET_NULL, related_name='snapshot_upvotes', null=True)
 
 #@dataclass
 class BV_Post(models.Model):

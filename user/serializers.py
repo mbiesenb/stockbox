@@ -1,20 +1,19 @@
 from rest_framework import serializers
-from . models import BV_User
-from core.serializers import BV_PostSerializer
+from . models import BV_User, BV_UserPostPreview
+#from core.serializers import BV_PostSerializer
 
 
-    username = ""
-    userDescription = ""
-    followers_count = 0
-    following_count  = 0
-    posts = list()
+class BV_UserPostsPreviewSerializer(serializers.ModelSerializer):
 
+    class Meta:
+        model =  BV_UserPostPreview
+        fields = ("description","previewUrl")
 
 class BV_UserSerializer(serializers.ModelSerializer):
 
-    posts = BV_PostSerializer(many=True, read_only=True)
+    posts = BV_UserPostsPreviewSerializer(many=True, read_only=True)
 
     class Meta:
         model = BV_User
-        fields = ("username","userDescription","followers_count","following_count","posts")
+        fields = ("username","profile_image","userDescription","followers_count","following_count","posts")
         depth = 1

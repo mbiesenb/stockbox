@@ -40,6 +40,7 @@ urlpatterns = [
     path('register/', RegisterView.as_view()),
     #path('api/post/', views.BV_Post)
     path('post/<int:pk>/', views.BV_PostView.as_view()),
+    path('user/', include('user.urls'))
 ]
 
 

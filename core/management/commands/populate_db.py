@@ -79,9 +79,9 @@ class Command(BaseCommand):
         ui3 = UserImage.objects.create( filename = 'file3',  filetype = 'jpg',  img_x = 100,  img_y = 100 )
 
         print(Fore.GREEN+"4.3.INSERT USERPROFILE")
-        up1 = UserProfile.objects.create(user = u1, firstname='Firstname1', lastname='lastname1', pic = ui1)
-        up2 = UserProfile.objects.create(user = u2, firstname='Firstname2', lastname='lastname2', pic = ui2)
-        up3 = UserProfile.objects.create(user = u3, firstname='Firstname3', lastname='lastname3', pic = ui3)
+        up1 = UserProfile.objects.create(user = u1, username='user1', firstname='Firstname1', lastname='lastname1', pic = ui1)
+        up2 = UserProfile.objects.create(user = u2, username='user2', firstname='Firstname2', lastname='lastname2', pic = ui2)
+        up3 = UserProfile.objects.create(user = u3, username='user3', firstname='Firstname3', lastname='lastname3', pic = ui3)
       
         print(Fore.GREEN+"4.4.INSERT LOCATION")
         l1 = Location.objects.create( longitude="444", latitude="999",locationText="Berlin" )
@@ -103,9 +103,9 @@ class Command(BaseCommand):
         sm3 = SnapShotMedia.objects.create( media_type = 2, media_url='www.google.de', media_filetype='png', media_image=None, media_video=mv1)
 
         print(Fore.GREEN+"4.6.INSERT SNAPSHOT")
-        s1 = Snapshot.objects.create( title = 'Snapshot1' , desc = 'This is Snapshot 1', author = up1, media = sm1, location = l1, upvotes =101)
-        s2 = Snapshot.objects.create( title = 'Snapshot2' , desc = 'This is Snapshot 2', author = up1, media = sm2, location = l2, upvotes =102)
-        s3 = Snapshot.objects.create( title = 'Snapshot3' , desc = 'This is Snapshot 3', author = up1, media = sm3, location = l3, upvotes =103)
+        s1 = Snapshot.objects.create( title = 'Snapshot1' , description = 'This is Snapshot 1', author = up1, media = sm1, location = l1, upvotes =101)
+        s2 = Snapshot.objects.create( title = 'Snapshot2' , description = 'This is Snapshot 2', author = up1, media = sm2, location = l2, upvotes =102)
+        s3 = Snapshot.objects.create( title = 'Snapshot3' , description = 'This is Snapshot 3', author = up1, media = sm3, location = l3, upvotes =103)
 
         print(Fore.GREEN+"4.7.INSERT COMMENT")
         c11 = Comment.objects.create( text = 'Random Comment 1', snapshot=s1,  author=up1, upvotes=1)
@@ -137,6 +137,10 @@ class Command(BaseCommand):
         uv1 = Upvote.objects.create(upvoter=up1, type=1, tag=None, comment=None, snapshot=s1)
         uv2 = Upvote.objects.create(upvoter=up2, type=1, tag=None, comment=None, snapshot=s1)
 
+        print (Fore.GREEN+"4.10.INSERT FOLLOWS")
+        f1 = Follow.objects.create(follower=up1, stalker=up2)
+        f2 = Follow.objects.create(follower=up2, stalker=up1)
+        f3 = Follow.objects.create(follower=up1, stalker=up3)
 
 #upvoter = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='upvoter', null=True)
 #    type = models.IntegerField() #1 = tag, 2=comment, 3 = snapshot

@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from . models import BV_User
+from . models import BV_User, BV_UserPostPreview
 from core.models import UserProfile #NEEDS TO BE CHANGED
-from . serializers import BV_UserSerializer
+from . serializers import BV_UserSerializer, BV_UserPostsPreviewSerializer
 from rest_framework import generics
 from django.contrib.auth.models import User
+from core.models import UserProfile
 from django.shortcuts import get_object_or_404
+from rest_framework.response import Response
 
 
 # I NEED TO CREATE A BV_UPLOAD
@@ -13,32 +15,31 @@ class BV_UserView(generics.CreateAPIView):
 
     serializer_class = BV_UserSerializer
     
-    #("username","userDescription","followers_count","following_count","posts")
 
-    def get(self, request,pk=None):
-        user =        get_object_or_404(User.objects.all(), pk=pk)
-        userProfile     = user.profile
-
+    def get(self, request,username='user1'):
+        user =            get_object_or_404(User, username=username)
+        userProfile     = UserProfile.get( user.username )
         username        = userProfile.username
+        profile_image   = "empty"
         userDescription = userProfile.description
         followers_count = userProfile.followers.count()
         following_count = userProfile.following.count()
-        post            = None # TBD
+
+        snapshots       = userProfile.snapshots.all()
+
+        posts            = BV_UserPostPreview.get_from_snapshots(snapshots)
 
         bv_post = BV_User(
-            username=username,
-            comment_count=comment_count,
-            profile=profile,
-            tags=tags,
-            upvotes=upvotes,
-            media_url = media_url,
-            media_type = media_type
+            username        =username,
+            profile_image   =profile_image,
+            userDescription =userDescription,
+            followers_count =followers_count,
+            following_count =following_count,
+            posts = posts
         )
-        #dict_obj = model_to_dict( tags )
-        #serialized = json.dumps(dict_obj)
-        #print(serialized)
-        ser = BV_PostSerializer(bv_post)
+        ser = BV_UserSerializer(bv_post)
+
         #ser.is_valid(raise_exception=True)
+
         return Response(ser.data)
 
-# Create your views here.
