@@ -16,7 +16,7 @@ class BV_UserView(generics.CreateAPIView):
     serializer_class = BV_UserSerializer
     
 
-    def get(self, request,username='user1'):
+    def get(self, request,username):
         user =            get_object_or_404(User, username=username)
         userProfile     = UserProfile.get( user.username )
         username        = userProfile.username
