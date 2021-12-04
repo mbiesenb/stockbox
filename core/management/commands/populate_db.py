@@ -1,4 +1,6 @@
-from core.models import Location, Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag, UserImage, MediaImage, MediaVideo, SnapShotMedia
+from core.models import  Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag
+from post.models import MediaImage, MediaVideo, SnapShotMedia, Location
+from user.models import UserImage
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 from django.core.management import call_command

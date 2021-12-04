@@ -1,7 +1,40 @@
 from django.db import models
-
+from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
+from django.db.models.fields import IntegerField
+from django.contrib.auth.models import User
 import user
 
+class UserImage(models.Model):
+    filename = models.CharField(max_length=50)
+    filetype = models.CharField(max_length=10)
+    img_x = models.IntegerField()
+    img_y = models.IntegerField() 
+    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
+
+    def __str__(self) -> str:
+        return self.filename + "." + self.filetype
+
+
+class UserProfile(models.Model):
+    user = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='profile')
+    username = models.CharField(max_length=150) # TODO: Find other solution
+    firstname = models.CharField(max_length=100)
+    lastname = models.CharField(max_length=100)
+    description = models.CharField(max_length=100)
+    pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
+    
+    def get(username):
+        #try:
+        #    profile = UserProfile.objects.get(username=username)
+        #except ObjectDoesNotExist:
+        #    return None
+        #
+        #return profile
+        profile = UserProfile.objects.get(username=username)
+        return profile
+
+    def __str__(self) -> str:
+        return self.user
 
 #//Business View: UserProfile
 #+ Username

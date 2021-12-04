@@ -1,106 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
 from django.db.models.fields import IntegerField
-from dataclasses import dataclass
-from typing import List
-from django.core.exceptions import ObjectDoesNotExist
-#from django.db.models.base import Model
-
-
+from post.models import Snapshot, Comment
+from user.models import UserProfile
 # Create your models here.
-
-class UserImage(models.Model):
-    filename = models.CharField(max_length=50)
-    filetype = models.CharField(max_length=10)
-    img_x = models.IntegerField()
-    img_y = models.IntegerField() 
-    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
-
-    def __str__(self) -> str:
-        return self.filename + "." + self.filetype
-
-
-class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='profile')
-    username = models.CharField(max_length=150) # TODO: Find other solution
-    firstname = models.CharField(max_length=100)
-    lastname = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
-    
-    def get(username):
-        #try:
-        #    profile = UserProfile.objects.get(username=username)
-        #except ObjectDoesNotExist:
-        #    return None
-        #
-        #return profile
-        profile = UserProfile.objects.get(username=username)
-        return profile
-
-    def __str__(self) -> str:
-        return self.user
-
-
-
-
-
-class Location(models.Model):
-    longitude = models.CharField(max_length=8)
-    latitude = models.CharField(max_length=8)
-    locationText = models.CharField(max_length=30)
-
-    def __str__(self) -> str:
-        return self.longitude + "." + self.latitude + "->" + self.locationText
-
-class MediaImage(models.Model):
-    img_x = models.IntegerField()
-    img_y = models.IntegerField() 
-    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
-
-    def __str__(self) -> str:
-        return "image"
-
-class MediaVideo(models.Model):
-    duration = models.IntegerField()
-    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
-
-    def __str__(self) -> str:
-        return "video"
-
-
-class SnapShotMedia(models.Model):
-    media_type = models.IntegerField()
-    media_url = models.CharField(max_length=50, default='')
-    media_filetype = models.CharField(max_length=50)
-    media_image = models.ForeignKey(MediaImage, on_delete=models.SET_NULL,related_name='media_image', null=True)
-    media_video = models.ForeignKey(MediaVideo, on_delete=models.SET_NULL, related_name='media_video', null=True)
-
-    def __str__(self) -> str:
-        return self.type
-
-class Snapshot(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    author = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, related_name='snapshots', null=True)
-    media = models.ForeignKey(SnapShotMedia, on_delete=models.SET_NULL, null=True)
-    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
-    upvotes = models.IntegerField()
-
-
-    def __str__(self) -> str:
-        return self.title
-
-
-class Comment(models.Model):
-    text = models.CharField(max_length=200) 
-    snapshot = models.ForeignKey(Snapshot, related_name='comments',on_delete=models.SET_NULL, null=True)
-    author = models.ForeignKey(UserProfile , on_delete=models.SET_NULL, null=True) 
-    upvotes = models.IntegerField(default=0)
-
-    def __str__(self) -> str:
-        return self.text
 
 
 class Tag(models.Model):
@@ -127,24 +30,18 @@ class Upvote(models.Model):
     comment     = models.ForeignKey(Comment, on_delete=SET_NULL, related_name='comment_upvotes', null=True)
     snapshot    = models.ForeignKey(Snapshot, on_delete=SET_NULL, related_name='snapshot_upvotes', null=True)
 
-#@dataclass
-class BV_Post(models.Model):
-    media_type = ""
-    media_url = ""
-    snapshot = None
-    upvotes  = 0
-    comment_count = 0
-    profile  = None
-    tags = list()
+#+ UserProfile
+#    + Username
+#    + ProfileImage
+#+ Kommentar
+#    + Kommentartext
+#    + Upvotes
+#    + Anzahl Sub-Kommentare
 
-    def __init__(self, psnapshot, upvotes, comment_count, profile, tags, media_type, media_url):
-        self.media_type = media_type
-        self.media_url = media_url
-        self.snapshot = psnapshot
-        self.upvotes = upvotes
-        self.comment_count = comment_count
-        self.profile = profile
-        self.tags = tags
+#class BV_Comment(models.Model):
+#    username = ""
+#    profileImagePreviewUrl = ""
+#    comment_text = ""
+#    upvotes = 0
 
-    class Meta:
-        managed = False
+

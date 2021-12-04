@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.db import models
-from . models import Snapshot , UserProfile , UserImage , Location ,  Comment , Tag
+from . models import Snapshot , UserProfile , Comment , Tag
+from user.models import UserImage
+from post.models import Location
 
 
 # Register your models here.
