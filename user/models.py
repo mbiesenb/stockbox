@@ -36,17 +36,6 @@ class UserProfile(models.Model):
     def __str__(self) -> str:
         return self.user
 
-#//Business View: UserProfile
-#+ Username
-#+ UserProfile
-#+ UserDescription
-#+ Followers - Cout
-#+ Following - Cout
-#+ Posts
-#    + PostImage/Video - Preview
-# toggle_followship
-# show_messages
-
 class BV_UserPostPreview(models.Model):
     
     previewUrl = ""

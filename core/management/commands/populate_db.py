@@ -1,4 +1,4 @@
-from core.models import  Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag
+from core.models import  Chat, Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag
 from post.models import MediaImage, MediaVideo, SnapShotMedia, Location
 from user.models import UserImage
 from django.core.management.base import BaseCommand, CommandError
@@ -7,6 +7,8 @@ from django.core.management import call_command
 from django.contrib.auth.models import User
 from colorama import init, Fore, Back, Style
 from pathlib import Path
+from datetime import datetime
+from django.utils import timezone
 import shutil
 import os
 
@@ -56,8 +58,23 @@ class Command(BaseCommand):
         if Path('core/migrations').exists():
             shutil.rmtree('core/migrations')
         os.mkdir('core/migrations')
-
         open('core/migrations/__init__.py','w').close()
+
+        if Path('auth/migrations').exists():
+            shutil.rmtree('auth/migrations')
+        os.mkdir('auth/migrations')
+        open('auth/migrations/__init__.py','w').close()
+
+        if Path('post/migrations').exists():
+            shutil.rmtree('post/migrations')
+        os.mkdir('post/migrations')
+        open('post/migrations/__init__.py','w').close()
+
+        if Path('user/migrations').exists():
+            shutil.rmtree('user/migrations')
+        os.mkdir('user/migrations')
+        open('user/migrations/__init__.py','w').close()
+       
 
 
         #4. Create Initial Migration
@@ -131,15 +148,21 @@ class Command(BaseCommand):
         t32 = Tag.objects.create( text = 'Random Tag 2', author=up2,snapshot=s2)
         t33 = Tag.objects.create( text = 'Random Tag 3', author=up3,snapshot=s2)
 
-        print(Fore.GREEN+"4.9.INSERT MESSAGE")
-        m1  = Message.objects.create( sender = up1, receiver = up2 , text = "Hello User 2, I am 1")
-        m2  = Message.objects.create( sender = up1, receiver = up3,  text = "Hello User 3, I am 1")
+        print(Fore.GREEN+"4.11.INSERT CHATS")
+        c1 = Chat.objects.create( user1 = up1, user2 = up2)
+        c2 = Chat.objects.create( user1 = up1, user2 = up3)
 
-        print(Fore.GREEN+"4.9.INSERT UPVOTES")
+        print(Fore.GREEN+"4.10.INSERT MESSAGE")
+        m1  = Message.objects.create( sender = up1, receiver = up2 , text = "Hello, how are you?", chat = c1, timestamp = timezone.make_aware( datetime.now() ))
+        m2  = Message.objects.create( sender = up2, receiver = up1,  text = "I am fine, thank you!", chat = c1, timestamp = timezone.make_aware( datetime.now() ))
+        m3  = Message.objects.create( sender = up1, receiver = up3 , text = "Hi User3, let´s met at 8PM ok?", chat = c2, timestamp = timezone.make_aware( datetime.now() ))
+        
+
+        print(Fore.GREEN+"4.11.INSERT UPVOTES")
         uv1 = Upvote.objects.create(upvoter=up1, type=1, tag=None, comment=None, snapshot=s1)
         uv2 = Upvote.objects.create(upvoter=up2, type=1, tag=None, comment=None, snapshot=s1)
 
-        print (Fore.GREEN+"4.10.INSERT FOLLOWS")
+        print (Fore.GREEN+"4.12.INSERT FOLLOWS")
         f1 = Follow.objects.create(follower=up1, stalker=up2)
         f2 = Follow.objects.create(follower=up2, stalker=up1)
         f3 = Follow.objects.create(follower=up1, stalker=up3)
