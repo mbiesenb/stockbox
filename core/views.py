@@ -14,6 +14,7 @@ class BV_ChatView(generics.CreateAPIView):
 
     serializer_class = BV_ChatSerializer
     queryset  = Chat.objects.all()
+
     def get(self, request,pk=None):
 
         username = request.user.username
@@ -69,19 +70,20 @@ class BV_ChatView(generics.CreateAPIView):
 class BV_ChatMessageView(generics.CreateAPIView):
 
     serializer_class = BV_ChatMessageSerializer
+    queryset  = Chat.objects.all()
 
 
     def get(self, request,chat_id=None):
 
         username_me = request.user.username
 
-        chat = get_object_or_404(self.queryset, pk=chat_id)
+        chat = get_object_or_404(Chat.objects.all(), pk=chat_id)
 
         messages = chat.messages
 
         bv_chatmessages = list()
 
-        for message in messages:
+        for message in messages.all():
             username = message.sender.username
             sender_image = message.sender.pic.filename
             if username == username_me:
@@ -99,7 +101,7 @@ class BV_ChatMessageView(generics.CreateAPIView):
                 message_time = message_time
             )
 
-        bv_chatmessages.append(bv_chatmessage)
+            bv_chatmessages.append(bv_chatmessage)
 
         ser = BV_ChatMessageSerializer(bv_chatmessages, many=True)
         #ser.is_valid(raise_exception=True)

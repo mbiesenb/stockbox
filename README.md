@@ -1,7 +1,14 @@
 # stockbox
-Back-End of a social media app
+A generic back-end of a social media app
 
-## Setting up the project
+
+* [Setting up project](#setting-up-project)
+* [Testing Application](#testing-application)
+* [Starting app manually](#starting-app-manually)
+* [Adding aditional services](#adding-additional-services)
+* [API Documentation](#api-documentation)
+
+## Setting up project
 Clone Repository from GitHub
 ```cmd
 git clone https://github.com/mbiesenb/stockbox.git
@@ -40,13 +47,26 @@ python .\manage.py migrate
 python .\manage.py runserver
 ```
 
-
-
-
 # Adding an aditional service
 ```cmd
 python .\manage.py startapp <Additional Service>
 ```
+
+# API Documentation
+|PATH|METHOD|Description|
+| ----------------------------------|--------|--------------|
+| /auth/token                       | POST   | Generate an new API token|
+| /auth/token/refresh             | POST   | Refresh an existing API token|
+| /auth/token/verifys                | POST   | Verify an existing API token  |
+| /auth/register                   | POST   | Create an new user |
+| /user/{username}              | GET    | Display user profiles + posts |
+| /post/{pk}                    | GET    | Display specific post    |
+| /post/{pk}/comments            | GET    | Display comments of a post   |
+| /core/chats                      | GET    | Display chats for session user   |
+| /core/chats/{chat_id}/messages | GET    | Display messages of a specific chat |
+
+
+
 
 
 

@@ -56,6 +56,12 @@
 # toggle_followship
 # show_messages
 
+//Business View: Chats
++ Receiver_username
++ last_message_text
++ last_message_time
++ unread_message_count
+
 
 //Business View: Message
 + UserProfileImage - Self
