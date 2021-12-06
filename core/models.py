@@ -30,18 +30,4 @@ class Upvote(models.Model):
     comment     = models.ForeignKey(Comment, on_delete=SET_NULL, related_name='comment_upvotes', null=True)
     snapshot    = models.ForeignKey(Snapshot, on_delete=SET_NULL, related_name='snapshot_upvotes', null=True)
 
-#+ UserProfile
-#    + Username
-#    + ProfileImage
-#+ Kommentar
-#    + Kommentartext
-#    + Upvotes
-#    + Anzahl Sub-Kommentare
-
-#class BV_Comment(models.Model):
-#    username = ""
-#    profileImagePreviewUrl = ""
-#    comment_text = ""
-#    upvotes = 0
-
 

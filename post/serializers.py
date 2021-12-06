@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from core.serializers import TagSerializer
 from user.serializers import UserProfileSerializer
-from . models import Comment, Snapshot, BV_Post
+from . models import BV_Comment, Comment, Snapshot, BV_Post
 
 
 
@@ -30,4 +30,12 @@ class BV_PostSerializer(serializers.ModelSerializer):
         model = BV_Post
         fields = ("media_type", "media_url", "upvotes",
                   "comment_count", "profile", "tags")
+        depth = 1
+
+
+class BV_CommentSerializer(serializers.ListSerializer):
+
+    class Meta:
+        model = BV_Comment
+        fields = ("username", "profileImagePreviewUrl", "comment_text", "upvotes")
         depth = 1

@@ -91,3 +91,29 @@ class Comment(models.Model):
 
     def __str__(self) -> str:
         return self.text
+
+    #def get(username):
+
+#+ UserProfile
+#    + Username
+#    + ProfileImage
+#+ Kommentar
+#    + Kommentartext
+#    + Upvotes
+#    + Anzahl Sub-Kommentare
+
+class BV_Comment(models.Model):
+    username = ""
+    profileImagePreviewUrl = ""
+    comment_text = ""
+    upvotes = 0
+
+    def __init__(self, username, profileImagePreviewUrl, comment_text, upvotes):
+        self.username = username
+        self.profileImagePreviewUrl = profileImagePreviewUrl
+        self.comment_text = comment_text
+        self.upvotes = upvotes
+
+        class Meta:
+            managed = False
+
