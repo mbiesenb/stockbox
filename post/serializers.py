@@ -33,7 +33,7 @@ class BV_PostSerializer(serializers.ModelSerializer):
         depth = 1
 
 
-class BV_CommentSerializer(serializers.ListSerializer):
+class BV_CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BV_Comment

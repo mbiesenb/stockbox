@@ -45,11 +45,12 @@ class SnapShotViewSet(viewsets.ModelViewSet):
 class BV_CommentView(generics.CreateAPIView):
 
     serializer_class = BV_CommentSerializer
+    queryset = Snapshot.objects.all()
 
     def get(self, request, pk=None):
 
         bv_comments = list()
-        snapshot = get_object_or_404(Snapshot.objects.all(), pk=pk)
+        snapshot = get_object_or_404( self.queryset , pk=pk)
 
         comments = snapshot.comments.all()
 
@@ -70,7 +71,7 @@ class BV_CommentView(generics.CreateAPIView):
 
             bv_comments.append(bv_comment)
 
-        ser = BV_PostSerializer(bv_comments) 
+        ser = BV_CommentSerializer(bv_comments, many=True) 
         #ser.is_valid(raise_exception=True)
         return Response(ser.data)
 
