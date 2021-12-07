@@ -70,3 +70,5 @@ python .\manage.py startapp <Additional Service>
 
 
 
+
+
