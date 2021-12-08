@@ -23,7 +23,7 @@ class UserProfile(models.Model):
     description = models.CharField(max_length=100)
     pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
     
-    def get(username):
+    def get_from_username(username):
         #try:
         #    profile = UserProfile.objects.get(username=username)
         #except ObjectDoesNotExist:

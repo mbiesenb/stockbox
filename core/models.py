@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
 from django.db.models.fields import IntegerField
+from django.db.models.query_utils import Q
 from post.models import Snapshot, Comment
 from user.models import UserProfile
 # Create your models here.
@@ -23,6 +24,15 @@ class Chat(models.Model):
     user1 = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='chats1', null=True)
     user2 = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='chats2', null= True)
 
+
+    def get_by_participants(u1, u2):
+        chat = Chat.objects.filter( Q(user1 = u1 , user2=u2)  | Q(user1 = u2 , user2 = u1) )
+
+        if len( chat ) == 1:
+            return chat[0]
+        else:
+            return None
+
 class Message(models.Model):
     chat        = models.ForeignKey(Chat, on_delete=SET_NULL, related_name='messages', null=True)
     sender      = models.ForeignKey(UserProfile, on_delete=SET_NULL,related_name='message_sent' ,null=True)
@@ -43,13 +53,6 @@ class Upvote(models.Model):
     snapshot    = models.ForeignKey(Snapshot, on_delete=SET_NULL, related_name='snapshot_upvotes', null=True)
 
 
-
-
-#//Business View: Chats
-#+ Receiver_username
-#+ last_message_text
-#+ last_message_time
-#+ unread_message_count
 class BV_Chat(models.Model):
     partner_username = ""
     partner_profileImage = ""
@@ -71,6 +74,7 @@ class BV_Chat(models.Model):
     class Meta:
         managed = False
 
+
 #//Business View: Message
 #+ UserProfileImage - Self
 #+ UserProfileImage - Partner
@@ -81,27 +85,48 @@ class BV_Chat(models.Model):
 # show_profile
 
 class BV_ChatMessage(models.Model):
-    username = ""
+    sender_username = ""
+    receiver_username = ""
     sender_image = ""
-    me = ""
+    #me = ""
     message_text = ""
     message_time = ""
 
-    def __init__(self, username, sender_image, me, message_text, message_time):
-        self.username = username
+    def __init__(self, sender_username, receiver_username, sender_image, message_text, message_time):
+        self.sender_username = sender_username
+        self.receiver_username = receiver_username
         self.sender_image = sender_image
-        self.me = me
+        #self.me = me
         self.message_text = message_text
         self.message_time = message_time
+    
+    def from_db_message(message):
+        sender_username = message.sender.username
+        receiver_username = message.receiver.username
+        sender_image = message.sender.pic.filename
+        message_text = message.text
+        message_time = message.timestamp
+
+        bv_chatmessage = BV_ChatMessage(
+            sender_username = sender_username,
+            receiver_username = receiver_username,
+            sender_image = sender_image,
+            message_text =  message_text,
+            message_time = message_time
+        )
+
+        return bv_chatmessage
 
     class Meta:
         managed = False
 
-#//Business View: Message
-#+ UserProfileImage - Self
-#+ UserProfileImage - Partner
-#+ Kommentare
-#    + Text
-#    + Uhrzeit
-# add_message
-# show_profile
+class BV_ChatMessageSend(models.Model):
+    message_text = ""
+    receiver_username = ""
+
+    def __ini__(self, message_text):
+        self.message_text = message_text
+    
+    class Meta:
+        managed = False
+
