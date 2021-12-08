@@ -66,10 +66,3 @@ python .\manage.py startapp <Additional Service>
 | /core/chats/{chat_id}/messages | GET    | Display messages of a specific chat |
 
 
-
-
-
-
-
-
-
