@@ -1,9 +1,11 @@
+from datetime import datetime
+from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework import generics
 from core import serializers
 from core.models import BV_Chat, BV_ChatMessage, Chat, Message
 from user.models import UserProfile
-from core.serializers import BV_ChatMessageSerializer, BV_ChatSerializer
+from core.serializers import BV_ChatMessageSerializer, BV_ChatSerializer, BV_ChatMessageSendSerializer
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
@@ -21,7 +23,7 @@ class BV_ChatView(generics.CreateAPIView):
         #REMOVE THIS STATIC USER HERE
         username = 'user1'
 
-        profile_me = UserProfile.get(username)
+        profile_me = UserProfile.get_from_username(username)
 
         chats1 = profile_me.chats1.all()
         chats2 = profile_me.chats2.all()
@@ -39,7 +41,7 @@ class BV_ChatView(generics.CreateAPIView):
             user2 = chat.user2
 
             partner_user = None
-            if user1 == profile_me.username:
+            if user1.username == profile_me.username:
                 partner_user = user2
             else:
                 partner_user = user1
@@ -66,6 +68,45 @@ class BV_ChatView(generics.CreateAPIView):
         #ser.is_valid(raise_exception=True)
         return Response(ser.data)
 
+    def post(self, request,pk=None):
+
+        username = "user1"
+        profile_me = UserProfile.get_from_username(username)
+
+        ser =  BV_ChatMessageSerializer(request.data)
+        message_text = ser.data['message_text']
+        receiver_username = ser.data['receiver_username']
+
+        profile_receiver = UserProfile.get_from_username(receiver_username)
+
+        # CHECK IF AN CHAT ALREADY EXISTS
+        chat = Chat.get_by_participants( profile_me, profile_receiver)
+
+        # IF CHAT DOES NOT EXISTS --> CREATE A NEW CHAT
+        if chat == None:
+            chat = Chat.objects.create(
+                user1 = profile_me,
+                user2 = profile_receiver
+            )
+
+        sender = profile_me
+        receiver = profile_receiver
+        text = message_text
+        read_status = 0
+        timestamp = timezone.make_aware( datetime.now() ) # gibt mehrere importe für timezone 
+
+        message = Message.objects.create(
+            chat        = chat,
+            sender      = sender,
+            receiver    = receiver,
+            text        = text,
+            read_status = read_status,
+            timestamp   = timestamp
+        )
+
+        bv_chatmessage = BV_ChatMessage.from_db_message(message)
+        ser = BV_ChatMessageSerializer(bv_chatmessage)
+        return Response(ser.data)
 
 class BV_ChatMessageView(generics.CreateAPIView):
 
@@ -84,23 +125,7 @@ class BV_ChatMessageView(generics.CreateAPIView):
         bv_chatmessages = list()
 
         for message in messages.all():
-            username = message.sender.username
-            sender_image = message.sender.pic.filename
-            if username == username_me:
-                me = "X"
-            else:
-                me = ""
-            message_text = message.text
-            message_time = message.timestamp
-
-            bv_chatmessage = BV_ChatMessage(
-                username = username,
-                sender_image = sender_image,
-                me = me,
-                message_text =  message_text,
-                message_time = message_time
-            )
-
+            bv_chatmessage = BV_ChatMessage.from_db_message(message)
             bv_chatmessages.append(bv_chatmessage)
 
         ser = BV_ChatMessageSerializer(bv_chatmessages, many=True)
