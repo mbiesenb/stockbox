@@ -88,7 +88,7 @@ coverage.xml
 .ipynb_checkpoints 
 
 # Stockbox files
-core/management/commands/*
+#core/management/commands/*
 
 
 core/migrations/
