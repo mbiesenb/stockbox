@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
 from django.db.models.fields import IntegerField
+import media
 from user.models import UserProfile
 
 
@@ -13,57 +14,58 @@ class Location(models.Model):
     def __str__(self) -> str:
         return self.longitude + "." + self.latitude + "->" + self.locationText
 
+class BV_MediaAccessToken(models.Model):
+    
+    media_access_token = ""
 
-class MediaImage(models.Model):
-    img_x = models.IntegerField()
-    img_y = models.IntegerField()
-
-    def __str__(self) -> str:
-        return "image"
-
-
-class MediaVideo(models.Model):
-    duration = models.IntegerField()
-
-    def __str__(self) -> str:
-        return "video"
-
-
-class SnapShotMedia(models.Model):
-    media_type = models.IntegerField()
-    media_url = models.CharField(max_length=50, default='')
-    media_filetype = models.CharField(max_length=50)
-    media_image = models.ForeignKey(
-        MediaImage, on_delete=models.SET_NULL, related_name='media_image', null=True)
-    media_video = models.ForeignKey(
-        MediaVideo, on_delete=models.SET_NULL, related_name='media_video', null=True)
-
-    def __str__(self) -> str:
-        return self.type
-
-# @dataclass
-
+    def __init(self, media_access_token):
+        self.media_access_token = media_access_token
 
 class BV_Post(models.Model):
-    media_type = ""
-    media_url = ""
-    snapshot = None
-    upvotes = 0
-    comment_count = 0
-    profile = None
-    tags = list()
+    title           = ""
+    description     = ""
+    snapshot        = None
+    upvotes         = 0
+    comment_count   = 0
+    username        = ""
+    media           = list()
+    tags            = list()
 
-    def __init__(self, psnapshot, upvotes, comment_count, profile, tags, media_type, media_url):
-        self.media_type = media_type
-        self.media_url = media_url
+    def __init__(self, title, description, psnapshot, upvotes, comment_count, username, tags, media):
+        self.title = title
+        self.description = description
         self.snapshot = psnapshot
         self.upvotes = upvotes
         self.comment_count = comment_count
-        self.profile = profile
+        self.username = username
         self.tags = tags
+        self.media = media.all()
 
     class Meta:
         managed = False
+
+    def from_snapshot(snapshot):
+        upvotes         = snapshot.snapshot_upvotes.count()
+        comment_count   = snapshot.comments.count()
+        username        = snapshot.author.username
+        tags            = snapshot.tags
+        title           = snapshot.title
+        description     = snapshot.description
+        media           = snapshot.media   
+
+        bv_post = BV_Post(
+            psnapshot       = snapshot,
+            comment_count   = comment_count,
+            username        = username,
+            tags            = tags,
+            upvotes         = upvotes,
+            title           = title,
+            description     = description,
+            media           = media #TODO: Fix this
+
+        )
+
+        return bv_post
 
 
 class Snapshot(models.Model):
@@ -71,8 +73,6 @@ class Snapshot(models.Model):
     description = models.CharField(max_length=100)
     author = models.ForeignKey(
         UserProfile, on_delete=models.SET_NULL, related_name='snapshots', null=True)
-    media = models.ForeignKey(
-        SnapShotMedia, on_delete=models.SET_NULL, null=True)
     location = models.ForeignKey(
         Location, on_delete=models.SET_NULL, null=True)
     upvotes = models.IntegerField()
@@ -92,15 +92,6 @@ class Comment(models.Model):
     def __str__(self) -> str:
         return self.text
 
-    #def get(username):
-
-#+ UserProfile
-#    + Username
-#    + ProfileImage
-#+ Kommentar
-#    + Kommentartext
-#    + Upvotes
-#    + Anzahl Sub-Kommentare
 
 class BV_Comment(models.Model):
     username = ""

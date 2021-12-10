@@ -56,13 +56,17 @@ python .\manage.py startapp <Additional Service>
 |PATH|METHOD|Description|
 | ----------------------------------|--------|--------------|
 | /auth/token                       | POST   | Generate an new API token|
-| /auth/token/refresh             | POST   | Refresh an existing API token|
-| /auth/token/verifys                | POST   | Verify an existing API token  |
-| /auth/register                   | POST   | Create an new user |
-| /user/{username}              | GET    | Display user profiles + posts |
-| /post/{pk}                    | GET    | Display specific post    |
-| /post/{pk}/comments            | GET    | Display comments of a post   |
-| /core/chats                      | GET    | Display chats for session user   |
-| /core/chats/{chat_id}/messages | GET    | Display messages of a specific chat |
-
-
+| /auth/token/refresh               | POST   | Refresh an existing API token|
+| /auth/token/verifys               | POST   | Verify an existing API token  |
+| /auth/register                    | POST   | Create an new user |
+| /user/{username}                  | GET    | Display user profiles + posts |
+| /post/{pk}                        | GET    | Display specific post    |
+| /post/{pk}/comments               | GET    | Display comments of a post   |
+| /core/chats                       | GET    | Display chats for session user   |
+| /core/chats                       | POST   | Write Message to User   |
+| /core/chats/{chat_id}/messages    | GET    | Display messages of a specific chat |
+| /media/                           | POST   | Upload a new media file |
+| /media/?MEDIA_ACCESS_TOKEN={id}   | GET    | Get an uploaded Media |
+| /post/{id}                        | GET    | Get a specific post |
+| /post/{id}                        | POST   | Create a post and link uploaded media |
+| /post/{id}/comments               | POSt   | Read comment of specific post |

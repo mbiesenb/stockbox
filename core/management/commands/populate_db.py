@@ -1,6 +1,7 @@
 from core.models import  Chat, Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag
-from post.models import MediaImage, MediaVideo, SnapShotMedia, Location
+from post.models import  Location
 from user.models import UserImage
+from media.models import MediaImage, MediaVideo, SnapShotMedia
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 from django.core.management import call_command
@@ -16,36 +17,16 @@ class Command(BaseCommand):
 
     help = 'Inserts dummy records'
 
-    def add_argument(self, parser):
-        pass
-        #parser.add_argument('')
+    def add_arguments(self, parser):
+
+        #pass
+        parser.add_argument('-a', '--andy', type=str, help='Option after executing (run = Run Server | apply = Run Server and Apply Requests)' )
+
     def handle(self, *args, **options):
         
+        and_option = options['andy']
+
         init(autoreset=True)
-
-        #cursor = connection.cursor()
-
-        #1. Delete all Tables
-
-        #print(Fore.GREEN+"1.DROP TABLES")
-        #cursor.execute('DROP TABLE IF EXISTS core_location')
-        ##print(Fore.GREEN+"1.DROP TABLES")
-        #cursor.execute('DROP TABLE IF EXISTS core_userprofile')
-        ##print(Fore.GREEN+"1.DROP TABLES")
-        #cursor.execute('DROP TABLE IF EXISTS core_comment')
-        #cursor.execute('DROP TABLE IF EXISTS core_tag')
-        #cursor.execute('DROP TABLE IF EXISTS core_follow')
-        #cursor.execute('DROP TABLE IF EXISTS core_snapshot')
-        #cursor.execute('DROP TABLE IF EXISTS core_message')
-        #cursor.execute('DROP TABLE IF EXISTS core_userimage')
-        #cursor.execute('DROP TABLE IF EXISTS core_snapshotimage')
-
-        #User.objects.all().delete()
-        #cursor.execute('DELETE FROM auth_user WHERE 1 = 1')
-        
-        #2. Delete all migration entries in db
-        #print(Fore.GREEN+"2.DELETE MIGRATIONS IN DB")
-        #cursor.execute('DELETE FROM django_migrations WHERE app = "core"')
         
         #1-2. DROP DATABASE
         print(Fore.GREEN+"1-2.DROP DATABASE")
@@ -53,7 +34,7 @@ class Command(BaseCommand):
             os.system('del db.sqlite3')
             #exec("rm db.sqlite3")
 
-        #3. Remove all migrations from fs
+        #3. Remove all migrations and files
         print(Fore.GREEN+"3.DELETE MIGRATIONS ON FS")
         if Path('core/migrations').exists():
             shutil.rmtree('core/migrations')
@@ -74,6 +55,15 @@ class Command(BaseCommand):
             shutil.rmtree('user/migrations')
         os.mkdir('user/migrations')
         open('user/migrations/__init__.py','w').close()
+
+        if Path('media/migrations').exists():
+            shutil.rmtree('media/migrations')
+        os.mkdir('media/migrations')
+        open('media/migrations/__init__.py','w').close()
+
+        if Path('media/storage/images').exists():
+            shutil.rmtree('media/storage/images')
+        os.mkdir('media/storage/images')
        
 
 
@@ -116,15 +106,17 @@ class Command(BaseCommand):
         mv1 = MediaVideo.objects.create( duration = 120 )
         mv2 = MediaVideo.objects.create( duration = 180 )
 
-        print(Fore.GREEN+"4.5.3 INSERT SNAPSHOTMEDIA")
-        sm1 = SnapShotMedia.objects.create( media_type = 1, media_url='www.google.de', media_filetype='png', media_image=mi1, media_video=None)
-        sm2 = SnapShotMedia.objects.create( media_type = 1, media_url='www.google.de', media_filetype='png', media_image=mi2, media_video=None)
-        sm3 = SnapShotMedia.objects.create( media_type = 2, media_url='www.google.de', media_filetype='png', media_image=None, media_video=mv1)
 
         print(Fore.GREEN+"4.6.INSERT SNAPSHOT")
-        s1 = Snapshot.objects.create( title = 'Snapshot1' , description = 'This is Snapshot 1', author = up1, media = sm1, location = l1, upvotes =101)
-        s2 = Snapshot.objects.create( title = 'Snapshot2' , description = 'This is Snapshot 2', author = up1, media = sm2, location = l2, upvotes =102)
-        s3 = Snapshot.objects.create( title = 'Snapshot3' , description = 'This is Snapshot 3', author = up1, media = sm3, location = l3, upvotes =103)
+        s1 = Snapshot.objects.create( title = 'Snapshot1' , description = 'This is Snapshot 1', author = up1, location = l1, upvotes =101)
+        s2 = Snapshot.objects.create( title = 'Snapshot2' , description = 'This is Snapshot 2', author = up1, location = l2, upvotes =102)
+        s3 = Snapshot.objects.create( title = 'Snapshot3' , description = 'This is Snapshot 3', author = up1, location = l3, upvotes =103)
+
+
+        print(Fore.GREEN+"4.5.3 INSERT SNAPSHOTMEDIA")
+        sm1 = SnapShotMedia.objects.create( content_type = 1, media_access_token='ababababababab',  media_image=mi1, media_video=None, snapshot=s1)
+        sm2 = SnapShotMedia.objects.create( content_type = 1, media_access_token='acacacacacacac',  media_image=mi2, media_video=None, snapshot=s1)
+        sm3 = SnapShotMedia.objects.create( content_type = 2, media_access_token='adadadadadadad',  media_image=None, media_video=mv1, snapshot=s1)
 
         print(Fore.GREEN+"4.7.INSERT COMMENT")
         c11 = Comment.objects.create( text = 'Random Comment 1', snapshot=s1,  author=up1, upvotes=1)
@@ -167,14 +159,8 @@ class Command(BaseCommand):
         f2 = Follow.objects.create(follower=up2, stalker=up1)
         f3 = Follow.objects.create(follower=up1, stalker=up3)
 
-#upvoter = models.ForeignKey(UserProfile, on_delete=SET_NULL, related_name='upvoter', null=True)
-#    type = models.IntegerField() #1 = tag, 2=comment, 3 = snapshot
-#    tag = models.ForeignKey(Tag, on_delete=SET_NULL, related_name='tag_upvotes', null=True)
-#    comment = models.ForeignKey(Comment, on_delete=SET_NULL, related_name='comment_upvotes', null=True)
-#    snapshot
 
-
-
-        #populate_db
+        #if and_option == 'run':
+         #   call_command('runserver')
 
         
