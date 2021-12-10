@@ -49,10 +49,10 @@ class BV_UserPostPreview(models.Model):
         posts = []
         for snapshot in snapshots:
 
-            preview_url = snapshot.media.media_url
+            #preview_url = snapshot.media.media_url
             description = snapshot.description
 
-            post = BV_UserPostPreview(preview_url, description)
+            post = BV_UserPostPreview('preview_url', description)
 
             posts.append(post)
 

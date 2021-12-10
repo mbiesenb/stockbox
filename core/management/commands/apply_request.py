@@ -50,7 +50,56 @@ class Command(BaseCommand):
         print(Fore.GREEN+"Chat History:")
         print(response.text)
 
+        ## POST SOME FANCY MEDIA
+        url = "http://localhost:8000/mediapost/"
 
+        payload={}
+        files=[
+        ('MEDIA_UPLOAD',('black_white.jpg',open('C:/Users/Marvin/Desktop/Hintergrundbilder/Leon/black_white.jpg','rb'),'image/jpeg')),
+        ('MEDIA_UPLOAD',('wallpaperbetter.jpg',open('C:/Users/Marvin/Desktop/Hintergrundbilder/Leon/wallpaperbetter.jpg','rb'),'image/jpeg')),
+        ('MEDIA_UPLOAD',('red.jpg',open('C:/Users/Marvin/Desktop/Hintergrundbilder/Leon/red.jpg','rb'),'image/jpeg')),
+        ('MEDIA_UPLOAD',('central.png',open('C:/Users/Marvin/Desktop/Hintergrundbilder/Leon/central.png','rb'),'image/png'))
+        ]
+        headers = {}
+
+        response = requests.request("POST", url, headers=headers, data=payload, files=files)
+        media_access_tokens = json.loads(response.text)
+
+        print(Fore.GREEN+"Media Upload Response Tokens")
+        for media_access_token in media_access_tokens:
+            media_access_token_d = media_access_token['media_access_token']
+            print(media_access_token_d)
+
+        media_access_token= json.loads(response.text)[0]['media_access_token']
+
+
+
+        ## GET ONE IMAGE
+        url = "http://localhost:8000/mediapost/?MEDIA_ACCESS_TOKEN="+str(media_access_token)
+
+        payload={}
+        headers = {}
+
+        response = requests.request("GET", url, headers=headers, data=payload)
+        print(Fore.GREEN+"Media download status code")
+        print(response.status_code )
+
+
+        ## Upload Post and connect to media
+        url = "http://localhost:8000/post/"
+
+        payload = json.dumps({
+            "title": "Snapshot1",
+            "description": "This is Snapshot 1",
+            "media": media_access_tokens
+        })
+        headers = {
+        'Content-Type': 'application/json'
+        }
+
+        response = requests.request("POST", url, headers=headers, data=payload)
+
+        print(response.text)
 
         
         

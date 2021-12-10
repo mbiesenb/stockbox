@@ -4,6 +4,10 @@
 *.pyc
 __pycache__
 db.sqlite3
+<<<<<<< HEAD
+=======
+media/storage
+>>>>>>> 840af777803f4dca6e836bc800fbd0cd66d05125
 
 # Backup files # 
 *.bak 
@@ -91,4 +95,8 @@ coverage.xml
 
 
 core/migrations/
+post/migrations/
+auth/migrations/
+media/migrations/
+user/migrations/
 env/
