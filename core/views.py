@@ -8,6 +8,7 @@ from user.models import UserProfile
 from core.serializers import BV_ChatMessageSerializer, BV_ChatSerializer, BV_ChatMessageSendSerializer
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
+from rest_framework import status
 
 # Create your views here.
 # http://www.tomchristie.com/rest-framework-2-docs/api-guide/routers
@@ -21,7 +22,7 @@ class BV_ChatView(generics.CreateAPIView):
 
         username = request.user.username
         #REMOVE THIS STATIC USER HERE
-        username = 'user1'
+        #username = 'user1'
 
         profile_me = UserProfile.get_from_username(username)
 
@@ -47,7 +48,11 @@ class BV_ChatView(generics.CreateAPIView):
                 partner_user = user1
             
             partner_username = partner_user.username
-            partner_profileImage = partner_user.pic.filename
+
+            if partner_user.pic != None:
+                partner_profileImage = partner_user.pic.filename
+            else:
+                partner_profileImage = "empty"
 
             unread_messages_count = chat.messages.filter(read_status = 0, receiver=profile_me).count()
 
@@ -70,7 +75,7 @@ class BV_ChatView(generics.CreateAPIView):
 
     def post(self, request,pk=None):
 
-        username = "user1"
+        username = request.user.username
         profile_me = UserProfile.get_from_username(username)
 
         ser =  BV_ChatMessageSerializer(request.data)
@@ -89,9 +94,9 @@ class BV_ChatView(generics.CreateAPIView):
                 user2 = profile_receiver
             )
 
-        sender = profile_me
-        receiver = profile_receiver
-        text = message_text
+        sender      = profile_me
+        receiver    = profile_receiver
+        text        = message_text
         read_status = 0
         timestamp = timezone.make_aware( datetime.now() ) # gibt mehrere importe für timezone 
 
@@ -106,7 +111,8 @@ class BV_ChatView(generics.CreateAPIView):
 
         bv_chatmessage = BV_ChatMessage.from_db_message(message)
         ser = BV_ChatMessageSerializer(bv_chatmessage)
-        return Response(ser.data)
+        return Response(ser.data, status=status.HTTP_201_CREATED)
+        
 
 class BV_ChatMessageView(generics.CreateAPIView):
 

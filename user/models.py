@@ -24,12 +24,6 @@ class UserProfile(models.Model):
     pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
     
     def get_from_username(username):
-        #try:
-        #    profile = UserProfile.objects.get(username=username)
-        #except ObjectDoesNotExist:
-        #    return None
-        #
-        #return profile
         profile = UserProfile.objects.get(username=username)
         return profile
 

@@ -70,49 +70,44 @@ class BV_Chat(models.Model):
         self.latest_message_timestamp = latest_message_timestamp
         self.unread_message_count = unread_message_count
 
-
     class Meta:
         managed = False
 
 
-#//Business View: Message
-#+ UserProfileImage - Self
-#+ UserProfileImage - Partner
-#+ Kommentare
-#    + Text
-#    + Uhrzeit
-# add_message
-# show_profile
 
 class BV_ChatMessage(models.Model):
-    sender_username = ""
-    receiver_username = ""
-    sender_image = ""
+    sender_username     = ""
+    receiver_username   = ""
+    sender_image        = ""
     #me = ""
-    message_text = ""
-    message_time = ""
+    message_text        = ""
+    message_time        = ""
 
     def __init__(self, sender_username, receiver_username, sender_image, message_text, message_time):
-        self.sender_username = sender_username
-        self.receiver_username = receiver_username
-        self.sender_image = sender_image
+        self.sender_username    = sender_username
+        self.receiver_username  = receiver_username
+        self.sender_image       = sender_image
         #self.me = me
-        self.message_text = message_text
-        self.message_time = message_time
+        self.message_text       = message_text
+        self.message_time       = message_time
     
     def from_db_message(message):
-        sender_username = message.sender.username
-        receiver_username = message.receiver.username
-        sender_image = message.sender.pic.filename
+        sender_username     = message.sender.username
+        receiver_username   = message.receiver.username
+        if message.sender.pic != None:
+            sender_image    = message.sender.pic.filename
+        else:
+            sender_image    = 'empty'
+
         message_text = message.text
         message_time = message.timestamp
 
         bv_chatmessage = BV_ChatMessage(
-            sender_username = sender_username,
-            receiver_username = receiver_username,
-            sender_image = sender_image,
-            message_text =  message_text,
-            message_time = message_time
+            sender_username     = sender_username,
+            receiver_username   = receiver_username,
+            sender_image        = sender_image,
+            message_text        =  message_text,
+            message_time        = message_time
         )
 
         return bv_chatmessage
@@ -124,7 +119,7 @@ class BV_ChatMessageSend(models.Model):
     message_text = ""
     receiver_username = ""
 
-    def __ini__(self, message_text):
+    def __init__(self, message_text):
         self.message_text = message_text
     
     class Meta:
