@@ -22,4 +22,4 @@ python manage populate_db
 
 git rm -r --cached .\env\
 
-
+python -m pip freeze > requirements.txt
