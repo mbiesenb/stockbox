@@ -64,6 +64,14 @@ class Command(BaseCommand):
         if Path('media/storage/images').exists():
             shutil.rmtree('media/storage/images')
         os.mkdir('media/storage/images')
+
+        if Path('media/storage/profileimages').exists():
+            shutil.rmtree('media/storage/profileimages')
+        os.mkdir('media/storage/profileimages')
+
+        if Path('media/storage/thumbnails').exists():
+            shutil.rmtree('media/storage/thumbnails')
+        os.mkdir('media/storage/thumbnails')
        
 
 

@@ -97,4 +97,6 @@ media/migrations/
 user/migrations/
 env/
 
-media/storage
+media/storage/images/*.*
+media/storage/profileimages/*.*
+media/storage/thumbnails/*.*
