@@ -112,7 +112,7 @@ class MessageModelTest(TestCase):
             'MEDIA_UPLOAD': image
         }
 
-        profile_image_upload = self.client.post("/mediapost/profileimage/", img_upload, follow=True)
+        profile_image_upload = self.client.post("/media/profileimage/", img_upload, follow=True)
         
         self.assertEqual(profile_image_upload.status_code, 201 )
 
@@ -131,7 +131,7 @@ class MessageModelTest(TestCase):
         self.assertEqual(register_request.status_code , 201)
         self.assertEqual(register_request.data['profile_image'], media_access_token)
 
-        url = "/mediapost/profileimage/?MEDIA_ACCESS_TOKEN="+str(media_access_token)
+        url = "/media/profileimage/?MEDIA_ACCESS_TOKEN="+str(media_access_token)
         profile_image_request = self.client.get(url)
 
         self.assertEqual(profile_image_request.status_code, 200)

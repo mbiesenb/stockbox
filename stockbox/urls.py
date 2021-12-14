@@ -30,9 +30,9 @@ urlpatterns = [
     path('user/', include('user.urls')),
     path('post/', include('post.urls')),
     path('core/', include('core.urls')),
-    path('mediapost/', include('media.urls')),
+    path('media/',include('media.urls')),
 ]
 
 
 
-urlpatterns += static( settings.MEDIA_URL , document_root = settings.MEDIA_ROOT )
+#urlpatterns += static( settings.MEDIA_URL , document_root = settings.MEDIA_ROOT )
