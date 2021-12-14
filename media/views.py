@@ -11,12 +11,13 @@ from media.serializers import BV_MediaUploadResponseSerializer
 
 from stockbox.settings import BASE_DIR
 from django.shortcuts import get_object_or_404
+import sys
 
 # Create your views here.
 
 class BV_MediaView(APIView):
-
-    #serializer_class = BV_PostSerializer
+    
+    __TESTING__ = sys.argv[1:2] == ['test']
     
     def get(self, request,pk=None):
         media_access_token = request.GET.get('MEDIA_ACCESS_TOKEN', '')
@@ -34,9 +35,9 @@ class BV_MediaView(APIView):
             )  
         )
 
-        pil_img = Image.open( media_path )
-
-        pil_img.save(response, SnapShotMedia.get_filetype_by_contenttype( snapshotMedia.content_type ))
+        if self.__TESTING__ == False:
+            pil_img = Image.open( media_path )
+            pil_img.save(response, SnapShotMedia.get_filetype_by_contenttype( snapshotMedia.content_type ))
 
         return response
 
@@ -61,10 +62,9 @@ class BV_MediaView(APIView):
                     content_type = content_type,
                     media_access_token= media_access_token
                 )
-
-                pil_img = Image.open( f.file )
-
-                pil_img.save(media_path)
+                if self.__TESTING__ == False:
+                    pil_img = Image.open( f.file )
+                    pil_img.save(media_path)
 
                 #TODO: Choose an other identifier for image
                 bv_mediaUpload_Response = BV_MediaUploadResponse(
@@ -97,7 +97,7 @@ class BV_MediaView(APIView):
 
 class BV_ProfileImageView(APIView):
 
-    #serializer_class = BV_PostSerializer
+    __TESTING__ = sys.argv[1:2] == ['test']
         
     def get(self, request,pk=None):
         media_access_token = request.GET.get('MEDIA_ACCESS_TOKEN', '')
@@ -113,9 +113,9 @@ class BV_ProfileImageView(APIView):
             content_type= 'image/png'
         )
 
-        pil_img = Image.open( media_path )
-
-        pil_img.save(response,  'PNG')
+        if self.__TESTING__ == False:
+            pil_img = Image.open( media_path )
+            pil_img.save(response,  'PNG')
 
         return response
 
@@ -136,9 +136,9 @@ class BV_ProfileImageView(APIView):
                 media_access_token= media_access_token
             )
 
-            pil_img = Image.open( uploaded_file.file )
-
-            pil_img.save(media_path)
+            if self.__TESTING__ == False:
+                pil_img = Image.open( uploaded_file.file )
+                pil_img.save(media_path)
                 
 
 
