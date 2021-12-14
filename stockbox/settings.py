@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'user',
     'post',
     'media',
+    'authentication',
 ]
 
 MIDDLEWARE = [

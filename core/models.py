@@ -78,15 +78,12 @@ class BV_Chat(models.Model):
 class BV_ChatMessage(models.Model):
     sender_username     = ""
     receiver_username   = ""
-    sender_image        = ""
-    #me = ""
     message_text        = ""
     message_time        = ""
 
-    def __init__(self, sender_username, receiver_username, sender_image, message_text, message_time):
+    def __init__(self, sender_username, receiver_username, message_text, message_time):
         self.sender_username    = sender_username
         self.receiver_username  = receiver_username
-        self.sender_image       = sender_image
         #self.me = me
         self.message_text       = message_text
         self.message_time       = message_time
@@ -94,18 +91,12 @@ class BV_ChatMessage(models.Model):
     def from_db_message(message):
         sender_username     = message.sender.username
         receiver_username   = message.receiver.username
-        if message.sender.pic != None:
-            sender_image    = message.sender.pic.filename
-        else:
-            sender_image    = 'empty'
-
         message_text = message.text
         message_time = message.timestamp
 
         bv_chatmessage = BV_ChatMessage(
             sender_username     = sender_username,
             receiver_username   = receiver_username,
-            sender_image        = sender_image,
             message_text        =  message_text,
             message_time        = message_time
         )

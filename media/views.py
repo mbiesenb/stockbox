@@ -1,12 +1,12 @@
 from django.http.response import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import uuid
 import os
 from PIL import Image
-from media.models import BV_MediaUploadResponse, MediaImage, SnapShotMedia
+from media.models import BV_MediaUploadResponse, MediaImage, ProfileImage, SnapShotMedia
 from media.serializers import BV_MediaUploadResponseSerializer
 
 from stockbox.settings import BASE_DIR
@@ -94,6 +94,76 @@ class BV_MediaView(APIView):
 
         return Response(ser.data)
 
+
+class BV_ProfileImageView(APIView):
+
+    #serializer_class = BV_PostSerializer
+        
+    def get(self, request,pk=None):
+        media_access_token = request.GET.get('MEDIA_ACCESS_TOKEN', '')
+
+        if media_access_token == '':
+            return HttpResponseNotFound("MEDIA_ACCESS_TOKEN not set")
+            
+        snapshotMedia = get_object_or_404( ProfileImage, media_access_token = media_access_token )
+
+        media_path = ProfileImage.get_path_from_media_access_token(snapshotMedia.media_access_token)
+
+        response = HttpResponse(
+            content_type= 'image/png'
+        )
+
+        pil_img = Image.open( media_path )
+
+        pil_img.save(response,  'PNG')
+
+        return response
+
+
+    def post(self, request, pk=None):
+            
+            
+        uploads = request.FILES.getlist('MEDIA_UPLOAD')
+        if len(uploads) == 0:
+            # TODO: Return error code here
+            pass
+
+        uploaded_file = uploads[0]
+        if uploaded_file.content_type.startswith("image/"):
+            media_access_token = str( uuid.uuid4().hex )
+
+            media_path = ProfileImage.get_path_from_media_access_token(
+                media_access_token= media_access_token
+            )
+
+            pil_img = Image.open( uploaded_file.file )
+
+            pil_img.save(media_path)
+                
+
+
+            bv_mediaUpload_Response = BV_MediaUploadResponse(
+                    media_upload_key = uploaded_file.name,
+                    media_access_token = media_access_token,
+                    upload_success = True,
+                    upload_message=""
+            )
+
+            ProfileImage.objects.create(
+                media_access_token = media_access_token,
+                profile = None
+            )
+
+                
+            ser = BV_MediaUploadResponseSerializer(bv_mediaUpload_Response)
+
+            return Response(ser.data, status=status.HTTP_201_CREATED)
+
+        else:
+            # TODO: Return error code here
+            pass
+
+        
                 
 
 

@@ -22,10 +22,10 @@ class MessageModelTest(TestCase):
         u3 = User.objects.create_user(username='test_user3', password='password3')
         u4 = User.objects.create_user(username='test_user4', password='password4')
         
-        up1 = UserProfile.objects.create(user = u1, username='test_user1', firstname='Test1', lastname='User1', pic = None)
-        up2 = UserProfile.objects.create(user = u2, username='test_user2', firstname='Test2', lastname='Test2', pic = None)
-        up3 = UserProfile.objects.create(user = u3, username='test_user3', firstname='Test3', lastname='Test3', pic = None)
-        up4 = UserProfile.objects.create(user = u4, username='test_user4', firstname='Test4', lastname='Test4', pic = None)
+        up1 = UserProfile.objects.create(user = u1, username='test_user1', firstname='Test1', lastname='User1')
+        up2 = UserProfile.objects.create(user = u2, username='test_user2', firstname='Test2', lastname='Test2')
+        up3 = UserProfile.objects.create(user = u3, username='test_user3', firstname='Test3', lastname='Test3')
+        up4 = UserProfile.objects.create(user = u4, username='test_user4', firstname='Test4', lastname='Test4')
         
         
     def setUp(self):

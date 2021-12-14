@@ -1,9 +1,29 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import UniqueValidator
-from core.models import Comment, Snapshot, UserProfile, Tag
+from authentication.models import BV_Register
 from rest_framework import serializers
 
 from django.contrib.auth.models import User
+
+
+class BV_RegisterSerializer(serializers.ModelSerializer):
+
+    #TODO: Fix the password thing
+    username    = serializers.CharField(required=True)
+    #password    = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    #password2   = serializers.CharField(write_only=True, required=True)
+    password    = serializers.CharField(required=True, validators=[validate_password])
+    password2   = serializers.CharField(required=True)
+    firstname   = serializers.CharField(required=False)
+    lastname    = serializers.CharField(required=False)
+    description = serializers.CharField(required=False)
+    profile_image = serializers.CharField(required=False)
+
+    class Meta:
+        model = BV_Register
+        fields = ('username', 'password', 'password2', 'firstname', 'lastname', 'description', 'profile_image' )
+
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(

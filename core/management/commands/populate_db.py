@@ -1,6 +1,6 @@
 from core.models import  Chat, Upvote, UserProfile, Comment, Follow,Snapshot, Message, Tag
 from post.models import  Location
-from user.models import UserImage
+from media.models import ProfileImage
 from media.models import MediaImage, MediaVideo, SnapShotMedia
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
@@ -41,10 +41,10 @@ class Command(BaseCommand):
         os.mkdir('core/migrations')
         open('core/migrations/__init__.py','w').close()
 
-        if Path('auth/migrations').exists():
-            shutil.rmtree('auth/migrations')
-        os.mkdir('auth/migrations')
-        open('auth/migrations/__init__.py','w').close()
+        if Path('authentication/migrations').exists():
+            shutil.rmtree('authentication/migrations')
+        os.mkdir('authentication/migrations')
+        open('authentication/migrations/__init__.py','w').close()
 
         if Path('post/migrations').exists():
             shutil.rmtree('post/migrations')
@@ -73,7 +73,7 @@ class Command(BaseCommand):
         call_command('migrate')
 
         #5 Population Database with new Data
-#Location, UserProfile, Comment, Follow,Snapshot, Message, Tag, UserImage
+#Location, UserProfile, Comment, Follow,Snapshot, Message, Tag, ProfileImage
 
         print(Fore.GREEN+"4.POPULATE DB")
         print(Fore.GREEN+"4.1.INSERT USER")
@@ -82,16 +82,16 @@ class Command(BaseCommand):
         u2 = User.objects.create_user(username='user2', password='password2')
         u3 = User.objects.create_user(username='user3', password='password3')
 
-        print(Fore.GREEN+"4.2.INSERT USERIMAGE")
-        ui1 = UserImage.objects.create( filename = 'file1',  filetype = 'jpg',  img_x = 100,  img_y = 100 )
-        ui2 = UserImage.objects.create( filename = 'file2',  filetype = 'jpg',  img_x = 100,  img_y = 100 )
-        ui3 = UserImage.objects.create( filename = 'file3',  filetype = 'jpg',  img_x = 100,  img_y = 100 )
-
-        print(Fore.GREEN+"4.3.INSERT USERPROFILE")
-        up1 = UserProfile.objects.create(user = u1, username='user1', firstname='Firstname1', lastname='lastname1', pic = ui1)
-        up2 = UserProfile.objects.create(user = u2, username='user2', firstname='Firstname2', lastname='lastname2', pic = ui2)
-        up3 = UserProfile.objects.create(user = u3, username='user3', firstname='Firstname3', lastname='lastname3', pic = ui3)
+        print(Fore.GREEN+"4.2.INSERT USERPROFILE")
+        up1 = UserProfile.objects.create(user = u1, username='user1', firstname='Firstname1', lastname='lastname1')
+        up2 = UserProfile.objects.create(user = u2, username='user2', firstname='Firstname2', lastname='lastname2')
+        up3 = UserProfile.objects.create(user = u3, username='user3', firstname='Firstname3', lastname='lastname3')
       
+        print(Fore.GREEN+"4.3.INSERT PROFILEIMAGE")
+        ui1 = ProfileImage.objects.create( media_access_token = 'file1', profile=up1 )
+        ui2 = ProfileImage.objects.create( media_access_token = 'file2', profile=up2 )
+        ui3 = ProfileImage.objects.create( media_access_token = 'file3', profile=up3 )
+
         print(Fore.GREEN+"4.4.INSERT LOCATION")
         l1 = Location.objects.create( longitude="444", latitude="999",locationText="Berlin" )
         l2 = Location.objects.create( longitude="444", latitude="999",locationText="Zürich" )

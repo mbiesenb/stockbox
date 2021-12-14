@@ -65,7 +65,10 @@ class BV_CommentView(generics.CreateAPIView):
         # TODO
         for comment in comments:
             username = comment.author.username
-            profileImangePreviewUrl = comment.author.pic.filename
+            if comment.author.current_profile_picture != None:
+                profileImangePreviewUrl = comment.author.current_profile_picture.media_access_token
+            else:
+                profileImangePreviewUrl = 'empty'
             comment_text = comment.text
             upvotes = comment.comment_upvotes.count()
 

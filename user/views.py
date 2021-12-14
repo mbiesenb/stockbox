@@ -19,30 +19,10 @@ class BV_UserView(generics.CreateAPIView):
     
 
     def get(self, request,username):
-        user =            get_object_or_404(User, username=username)
-        userProfile     = UserProfile.get( user.username )
-        username        = userProfile.username
-        profile_image   = "empty"
-        userDescription = userProfile.description
-        followers_count = userProfile.followers.count()
-        following_count = userProfile.following.count()
-
-        snapshots       = userProfile.snapshots.all()
-
-        posts            = BV_UserPostPreview.get_from_snapshots(snapshots)
-
-        bv_post = BV_User(
-            username        =username,
-            profile_image   =profile_image,
-            userDescription =userDescription,
-            followers_count =followers_count,
-            following_count =following_count,
-            posts = posts
-        )
-        ser = BV_UserSerializer(bv_post)
-
-        #ser.is_valid(raise_exception=True)
-
+        user    = get_object_or_404(User, username=username)
+        profile = UserProfile.get( user.username )
+        bv_post = BV_User.from_profile(profile)
+        ser     = BV_UserSerializer(bv_post)
         return Response(ser.data)
 
 class UserProfileViewSet(viewsets.ModelViewSet):

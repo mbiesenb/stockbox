@@ -49,8 +49,8 @@ class BV_ChatView(generics.CreateAPIView):
             
             partner_username = partner_user.username
 
-            if partner_user.pic != None:
-                partner_profileImage = partner_user.pic.filename
+            if partner_user.current_profile_image != None:
+                partner_profileImage = partner_user.current_profile_image.media_access_token
             else:
                 partner_profileImage = "empty"
 
