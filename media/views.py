@@ -8,16 +8,18 @@ import os
 from PIL import Image
 from media.models import BV_MediaUploadResponse, MediaImage, ProfileImage, SnapShotMedia
 from media.serializers import BV_MediaUploadResponseSerializer
-
 from stockbox.settings import BASE_DIR
 from django.shortcuts import get_object_or_404
 import sys
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 
 class BV_MediaView(APIView):
     
     __TESTING__ = sys.argv[1:2] == ['test']
+
+    permission_classes = (IsAuthenticated,)
     
     def get(self, request,pk=None):
         media_access_token = request.GET.get('MEDIA_ACCESS_TOKEN', '')
@@ -99,6 +101,8 @@ class BV_ProfileImageView(APIView):
 
     __TESTING__ = sys.argv[1:2] == ['test']
         
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request,pk=None):
         media_access_token = request.GET.get('MEDIA_ACCESS_TOKEN', '')
 

@@ -33,8 +33,20 @@ class MessageModelTest(TestCase):
         file_obj.seek(0)
         return File(file_obj, name=name)
 
+
     def setUp(self):
         self.client = APIClient()
+
+        self.credentials = {
+            'username': 'test_user1',
+            'password': 'password1'
+        }
+
+        auth_response = self.client.post("/auth/token/", self.credentials, format='json', follow=True)
+        token = str(auth_response.data['access'])
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer {0}'.format(token))
+
 
     
     def test_receive_acces_token(self):
