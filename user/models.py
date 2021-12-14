@@ -7,8 +7,8 @@ from media.models import ProfileImage
 
 
 class UserProfile(models.Model):
-    user                    = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='profile')
-    username                = models.CharField(max_length=150) # TODO: Find other solution
+    username                = models.CharField(max_length=150, primary_key=True) # TODO: Find other solution
+    user                    = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='p')
     firstname               = models.CharField(max_length=100)
     lastname                = models.CharField(max_length=100)
     description             = models.CharField(max_length=100)
