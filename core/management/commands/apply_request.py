@@ -51,7 +51,7 @@ class Command(BaseCommand):
         print(response.text)
 
         ## POST SOME FANCY MEDIA
-        url = "http://localhost:8000/mediapost/"
+        url = "http://localhost:8000/media/"
 
         payload={}
         files=[
@@ -75,7 +75,7 @@ class Command(BaseCommand):
 
 
         ## GET ONE IMAGE
-        url = "http://localhost:8000/mediapost/?MEDIA_ACCESS_TOKEN="+str(media_access_token)
+        url = "http://localhost:8000/media/?MEDIA_ACCESS_TOKEN="+str(media_access_token)
 
         payload={}
         headers = {}

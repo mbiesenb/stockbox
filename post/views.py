@@ -9,17 +9,18 @@ from rest_framework import serializers, viewsets
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
-
+from rest_framework.permissions import IsAuthenticated
 from user.models import UserProfile
-
 from django.forms.models import model_to_dict
 
 # Create your views here.
 
 class SnapShotViewSet(viewsets.ModelViewSet):
 
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
+
     queryset = Snapshot.objects.all()
+
     serializer_class = SnapshotSerializer
 
     def list(self, request):
@@ -51,6 +52,7 @@ class SnapShotViewSet(viewsets.ModelViewSet):
 
 class BV_CommentView(generics.CreateAPIView):
 
+    permission_classes = (IsAuthenticated,)
     serializer_class = BV_CommentSerializer
     queryset = Snapshot.objects.all()
 
@@ -85,11 +87,12 @@ class BV_CommentView(generics.CreateAPIView):
         #ser.is_valid(raise_exception=True)
         return Response(ser.data)
 
-class BV_PostUpload(generics.CreateAPIView):
-    serializers
+
 class BV_PostView(generics.CreateAPIView):
 
     serializer_class = BV_PostSerializer
+
+    permission_classes = (IsAuthenticated,)
     
     def get(self, request,pk=None):
 
@@ -152,21 +155,6 @@ class BV_PostView(generics.CreateAPIView):
 
         return Response(ser.data)
 
-        
-
-
-        
-
-        #title = models.CharField(max_length=100)
-        #description = models.CharField(max_length=100)
-        #author = models.ForeignKey(
-        #    UserProfile, on_delete=models.SET_NULL, related_name='snapshots', null=True)
-        #location = models.ForeignKey(
-        #    Location, on_delete=models.SET_NULL, null=True)
-        #upvotes = models.IntegerField()
-
-        #def __str__(self) -> str:
-        #    return self.title
 
 
 
