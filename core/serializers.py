@@ -20,7 +20,7 @@ class BV_ChatSerializer(serializers.ModelSerializer):
 class BV_ChatMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = BV_ChatMessage
-        fields = ("sender_username","receiver_username", "sender_image", "message_text","message_time")
+        fields = ("sender_username","receiver_username", "message_text","message_time")
 
 class BV_ChatMessageSendSerializer(serializers.ModelSerializer):
 

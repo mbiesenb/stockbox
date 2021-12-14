@@ -1,31 +1,40 @@
 from django.db import models
 from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
-from django.db.models.fields import IntegerField
 from django.contrib.auth.models import User
-import user
+from media.models import ProfileImage
 
-class UserImage(models.Model):
-    filename = models.CharField(max_length=50)
-    filetype = models.CharField(max_length=10)
-    img_x = models.IntegerField()
-    img_y = models.IntegerField() 
-    #pic = models.ImageField(null=True, blank=True, upload_to='images/')
 
-    def __str__(self) -> str:
-        return self.filename + "." + self.filetype
 
 
 class UserProfile(models.Model):
-    user = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='profile')
-    username = models.CharField(max_length=150) # TODO: Find other solution
-    firstname = models.CharField(max_length=100)
-    lastname = models.CharField(max_length=100)
-    description = models.CharField(max_length=100)
-    pic = models.ForeignKey(UserImage, on_delete=models.SET_NULL, null=True)
+    user                    = models.ForeignKey(User, on_delete=SET_NULL, null=True, related_name='profile')
+    username                = models.CharField(max_length=150) # TODO: Find other solution
+    firstname               = models.CharField(max_length=100)
+    lastname                = models.CharField(max_length=100)
+    description             = models.CharField(max_length=100)
+    current_profile_image   = models.ForeignKey(ProfileImage, on_delete=models.SET_NULL, null=True)
     
     def get_from_username(username):
         profile = UserProfile.objects.get(username=username)
         return profile
+
+    def username_already_exists(username):
+        profileExists = True
+        userExists = True
+        try:
+            userProfile = UserProfile.get_from_username(username)
+        except UserProfile.DoesNotExist:
+            profileExists = False
+
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            userExists = False
+        
+        exists = profileExists == True or userExists == True
+
+        return exists
+            
 
     def __str__(self) -> str:
         return self.user
@@ -75,3 +84,29 @@ class BV_User(models.Model):
 
     class Meta:
         managed = False
+
+    def from_profile(profile):
+
+        username        = profile.username
+        if profile.current_profile_image != None:
+            profile_image = profile.current_profile_image.media_access_token
+        else:
+            profile_image   = "empty"
+        userDescription = profile.description
+        followers_count = profile.followers.count()
+        following_count = profile.following.count()
+
+        snapshots       = profile.snapshots.all()
+
+        posts            = BV_UserPostPreview.get_from_snapshots(snapshots)
+
+        bv_post = BV_User(
+            username        =username,
+            profile_image   =profile_image,
+            userDescription =userDescription,
+            followers_count =followers_count,
+            following_count =following_count,
+            posts = posts
+        )
+
+        return bv_post

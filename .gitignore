@@ -92,7 +92,7 @@ coverage.xml
 
 core/migrations/
 post/migrations/
-auth/migrations/
+authentication/migrations/
 media/migrations/
 user/migrations/
 env/

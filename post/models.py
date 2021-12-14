@@ -1,15 +1,12 @@
 from django.db import models
 from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
-from django.db.models.fields import IntegerField
-import media
+
 from user.models import UserProfile
 
-
-
 class Location(models.Model):
-    longitude = models.CharField(max_length=8)
-    latitude = models.CharField(max_length=8)
-    locationText = models.CharField(max_length=30)
+    longitude   	= models.CharField(max_length=8)
+    latitude        = models.CharField(max_length=8)
+    locationText    = models.CharField(max_length=30)
 
     def __str__(self) -> str:
         return self.longitude + "." + self.latitude + "->" + self.locationText
@@ -32,14 +29,14 @@ class BV_Post(models.Model):
     tags            = list()
 
     def __init__(self, title, description, psnapshot, upvotes, comment_count, username, tags, media):
-        self.title = title
-        self.description = description
-        self.snapshot = psnapshot
-        self.upvotes = upvotes
-        self.comment_count = comment_count
-        self.username = username
-        self.tags = tags
-        self.media = media.all()
+        self.title          = title
+        self.description    = description
+        self.snapshot       = psnapshot
+        self.upvotes        = upvotes
+        self.comment_count  = comment_count
+        self.username       = username
+        self.tags           = tags
+        self.media          = media.all()
 
     class Meta:
         managed = False
@@ -71,10 +68,8 @@ class BV_Post(models.Model):
 class Snapshot(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=100)
-    author = models.ForeignKey(
-        UserProfile, on_delete=models.SET_NULL, related_name='snapshots', null=True)
-    location = models.ForeignKey(
-        Location, on_delete=models.SET_NULL, null=True)
+    author = models.ForeignKey( UserProfile, on_delete=models.SET_NULL, related_name='snapshots', null=True)
+    location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
     upvotes = models.IntegerField()
 
     def __str__(self) -> str:
