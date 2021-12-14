@@ -9,20 +9,20 @@ from core.serializers import BV_ChatMessageSerializer, BV_ChatSerializer, BV_Cha
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
-# http://www.tomchristie.com/rest-framework-2-docs/api-guide/routers
 
 class BV_ChatView(generics.CreateAPIView):
 
+    permission_classes = (IsAuthenticated,)
+
     serializer_class = BV_ChatSerializer
+
     queryset  = Chat.objects.all()
 
     def get(self, request,pk=None):
 
         username = request.user.username
-        #REMOVE THIS STATIC USER HERE
-        #username = 'user1'
 
         profile_me = UserProfile.get_from_username(username)
 
@@ -67,10 +67,8 @@ class BV_ChatView(generics.CreateAPIView):
 
             bv_chats.append(bv_chat)
 
-        #bv_chats.sort(key=latest_message_timestamp)
 
         ser = BV_ChatSerializer(bv_chats, many=True)
-        #ser.is_valid(raise_exception=True)
         return Response(ser.data)
 
     def post(self, request,pk=None):
@@ -117,8 +115,10 @@ class BV_ChatView(generics.CreateAPIView):
 class BV_ChatMessageView(generics.CreateAPIView):
 
     serializer_class = BV_ChatMessageSerializer
+
     queryset  = Chat.objects.all()
 
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request,chat_id=None):
 

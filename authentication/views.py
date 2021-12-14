@@ -2,8 +2,6 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import generics
 from django.contrib.auth.models import User
-
-
 from authentication.serializers import BV_RegisterSerializer, RegisterSerializer
 from media.models import ProfileImage
 from user.models import BV_User, UserProfile
@@ -13,6 +11,9 @@ from rest_framework import status
 # Create your views here.
 
 class RegisterView(generics.CreateAPIView):
+
+    
+
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
 
@@ -29,11 +30,8 @@ class BV_RegisterView(generics.CreateAPIView):
         description          = ser.data['description']
         media_access_token   = ser.data['profile_image']
 
-        #fields = ('username', 'password', 'password2', 'firstname', 'lastname', 'description', 'profile_image' )
 
         #check if username is unique
-
-        userProfile = None
         username_already_exists = UserProfile.username_already_exists(username=username)
 
         if ( username_already_exists):

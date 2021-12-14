@@ -1,10 +1,9 @@
 from django.db import models
 from django.db.models.deletion import CASCADE, PROTECT, SET_NULL
-from django.db.models.fields import IntegerField
 from django.db.models.query_utils import Q
 from post.models import Snapshot, Comment
 from user.models import UserProfile
-# Create your models here.
+
 
 
 class Tag(models.Model):
@@ -14,9 +13,6 @@ class Tag(models.Model):
 
     def __str__(self) -> str:
         return self.text
-
-
-
 
 # When a user writes a message, the api generates two entries in chat model
 # one with user1 = u1 , user2 = u2 and one for user1 = u2, user2 = u1
