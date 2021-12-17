@@ -10,7 +10,7 @@ from PIL import Image
 from django.core.files.base import File
 
 # Create your tests here.
-class MessageModelTest(TestCase):
+class AuthenticationModelTest(TestCase):
     
 
     @classmethod

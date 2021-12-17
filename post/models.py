@@ -28,7 +28,7 @@ class BV_Post(models.Model):
     media           = list()
     tags            = list()
 
-    def __init__(self, title, description, psnapshot, upvotes, comment_count, username, tags, media):
+    def __init__(self, tags, media, title="", description="", psnapshot=None, upvotes=0, comment_count=0, username=""):
         self.title          = title
         self.description    = description
         self.snapshot       = psnapshot
@@ -36,7 +36,7 @@ class BV_Post(models.Model):
         self.comment_count  = comment_count
         self.username       = username
         self.tags           = tags
-        self.media          = media.all()
+        self.media          = media
 
     class Meta:
         managed = False
@@ -58,7 +58,7 @@ class BV_Post(models.Model):
             upvotes         = upvotes,
             title           = title,
             description     = description,
-            media           = media #TODO: Fix this
+            media           = media
 
         )
 
@@ -100,6 +100,31 @@ class BV_Comment(models.Model):
         self.comment_text = comment_text
         self.upvotes = upvotes
 
-        class Meta:
-            managed = False
+    def from_comment(comment):
+        username = comment.author.username
+            
+        if comment.author.current_profile_image != None:
+            profileImangePreviewUrl = comment.author.current_profile_image.media_access_token
+        else:
+            profileImangePreviewUrl = 'empty'
+        
+        comment_text    = comment.text
+        upvotes         = comment.comment_upvotes.count()
+
+        bv_comment = BV_Comment(
+            username                =username,
+            profileImagePreviewUrl  =profileImangePreviewUrl,
+            comment_text            =comment_text,
+            upvotes                 =upvotes
+        )
+
+        return bv_comment
+
+
+
+    class Meta:
+        managed = False
+
+    
+
 
