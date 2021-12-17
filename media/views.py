@@ -64,8 +64,9 @@ class BV_MediaView(APIView):
                     content_type = content_type,
                     media_access_token= media_access_token
                 )
+
+                pil_img = Image.open( f.file )                
                 if self.__TESTING__ == False:
-                    pil_img = Image.open( f.file )
                     pil_img.save(media_path)
 
                 #TODO: Choose an other identifier for image
@@ -75,7 +76,7 @@ class BV_MediaView(APIView):
                     upload_success = True,
                     upload_message=""
                 )
-
+                
                 media_image = MediaImage.objects.create(
                     img_x = pil_img.size[0],
                     img_y = pil_img.size[1]
@@ -94,7 +95,7 @@ class BV_MediaView(APIView):
 
         ser = BV_MediaUploadResponseSerializer(bv_uploads , many=True)
 
-        return Response(ser.data)
+        return Response(ser.data, status=status.HTTP_201_CREATED)
 
 
 class BV_ProfileImageView(APIView):

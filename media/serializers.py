@@ -17,8 +17,14 @@ class BV_MediaUploadResponseSerializer(serializers.ModelSerializer):
 
 class BV_PostMediaSerializer(serializers.ModelSerializer):
 
+    media_access_token = serializers.CharField(required=True, max_length=100)
+
     class Meta:
        
         model = BV_PostMedia
-        fields = ("content_type", "media_access_token")
+        #fields = ("content_type", "media_access_token")
+        fields = ("media_access_token",)
         depth = 1
+    
+    def create(validated_data):
+        i = 3

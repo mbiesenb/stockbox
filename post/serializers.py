@@ -32,19 +32,30 @@ class BV_MediaAccessTokenSerializer(serializers.ModelSerializer):
 class BV_PostSerializer(serializers.ModelSerializer):
 
     #profile = UserProfileSerializer(many=False, read_only=True)
-    tags = TagSerializer(many=True, read_only=True)
-    media = BV_PostMediaSerializer(many=True, read_only=True)
+    tags = TagSerializer(many=True, required=False)
+    media = BV_PostMediaSerializer(many=True, required=False)
 
-    #upvotes = serializers.IntegerField(required=False)
-    #comment_count = serializers.IntegerField(required=False)
-    #username =serializers.CharField(max_length=50, required=False)
-    #tags = serializers.Li
+    title = serializers.CharField(max_length=100, required=False)
+    description = serializers.CharField(max_length=100, required=False)
+    upvotes = serializers.IntegerField(required=False)
+    comment_count = serializers.IntegerField(required=False)
+    username =serializers.CharField(max_length=100, required=False)
 
+    #def create(self, validated_data):
+    #    choice_validated_data = validated_data.pop('choice_set')
+    #    question = 1 #Question.objects.create(**validated_data)
+    #    choice_set_serializer = self.fields['choice_set']
+    #    for each in choice_validated_data:
+    #        each['question'] = question
+    #    choices = choice_set_serializer.create(choice_validated_data)
+    #    return question
 
+    #def __init__(self, *args, **kwargs):
+    #    self.media = BV_PostMediaSerializer(data= args[0].media, many=True)
     class Meta:
         model = BV_Post
         fields = ( "title", "description","upvotes", "comment_count", "username", "tags", "media")
-        depth = 1
+        depth = 2
 
 
 

@@ -67,6 +67,9 @@ python .\manage.py startapp <Additional Service>
 | /core/chats/{chat_id}/messages    | GET    | Display messages of a specific chat |
 | /media/                           | POST   | Upload a new media file |
 | /media/?MEDIA_ACCESS_TOKEN={id}   | GET    | Get an uploaded Media |
+| /media/profileimage/              | POST    | Upload profile image |
+| /media/profileimage/?MEDIA_ACCESS_TOKEN={id}   | GET    | Get a profile image |
 | /post/{id}                        | GET    | Get a specific post |
 | /post/{id}                        | POST   | Create a post and link uploaded media |
-| /post/{id}/comments               | POSt   | Read comment of specific post |
+| /post/{id}/comments               | GET   | Read comment of specific post |
+| /post/{id}/comments               | POST   | Add a new Comment |

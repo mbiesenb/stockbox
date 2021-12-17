@@ -86,7 +86,7 @@ class SnapShotMedia(models.Model):
 class BV_PostMedia(models.Model):
 
     media_access_token = ""
-    content_type = ""
+    #content_type = ""
 
     class Meta:
         managed = False
